@@ -1,0 +1,68 @@
+{
+    "bystate\/telugu-saree.png": {
+        "forehead-pendant": {
+            "x": 10.5,
+            "y": 15.2
+        },
+        "hair-jewellery": {
+            "x": 85.3,
+            "y": 12.8
+        },
+        "earrings-stud": {
+            "x": 78.2,
+            "y": 32.1
+        },
+        "earrings-drops": {
+            "x": 79.1,
+            "y": 40.5
+        },
+        "ear-loops": {
+            "x": 90.2,
+            "y": 35.8
+        },
+        "nose-pin": {
+            "x": 25.8,
+            "y": 28.2
+        },
+        "choker-necklace": {
+            "x": 78.5,
+            "y": 47.8
+        },
+        "short-necklace": {
+            "x": 77.2,
+            "y": 55.1
+        },
+        "long-necklace": {
+            "x": 81.1,
+            "y": 61.2
+        },
+        "multiple-bangles": {
+            "x": 2.5,
+            "y": 75.3
+        },
+        "bracelet": {
+            "x": 2.5,
+            "y": 58.1
+        },
+        "single-bangle": {
+            "x": 2.5,
+            "y": 66.8
+        },
+        "rings": {
+            "x": 33.2,
+            "y": 38.5
+        },
+        "waist-belt": {
+            "x": 4.1,
+            "y": 96.2
+        },
+        "anklet": {
+            "x": 46.5,
+            "y": 69.1
+        },
+        "toe-ring": {
+            "x": 90.8,
+            "y": 89.5
+        }
+    }
+}

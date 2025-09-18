@@ -272,6 +272,42 @@
             }
         }
 
+        /* Mobile simulation styles */
+        .mobile-simulation {
+            max-width: 375px !important;
+            margin: 0 auto;
+            transform: scale(0.8);
+            transform-origin: top center;
+        }
+
+        .mobile-simulation .model-image {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .mobile-simulation .jewellery-label {
+            font-size: 0.7rem !important;
+            padding: 2px 4px !important;
+        }
+
+        .mobile-simulation .jewellery-position {
+            width: 6px !important;
+            height: 6px !important;
+        }
+
+        /* Device mode indicator */
+        .device-mode-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            z-index: 1000;
+        }
+
         /* Button styles */
         .btn-custom {
             background: linear-gradient(135deg, #8a2323, #42210b);
@@ -444,6 +480,24 @@
                     <!-- Controls Panel -->
                     <div class="controls-panel">
                         <h4 class="controls-title">Jewellery Controls</h4>
+                        
+                        <!-- Device Toggle -->
+                        <div class="mb-3 pb-3 border-bottom">
+                            <label class="form-label">Edit Mode:</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="device-mode" id="desktop-mode" value="desktop" checked>
+                                <label class="btn btn-outline-primary" for="desktop-mode">
+                                    📱 Desktop
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="device-mode" id="mobile-mode" value="mobile">
+                                <label class="btn btn-outline-primary" for="mobile-mode">
+                                    📱 Mobile
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-1">Switch between desktop and mobile label positioning</small>
+                        </div>
+                        
                         <div class="mb-3">
                             <small class="text-muted">Drag labels to reposition. Red dots show jewellery positions.</small>
                         </div>
@@ -638,6 +692,9 @@
         let currentModelData = null;
         let jewelleryPositions = {};
         let labelPositions = {}; // Store custom label positions
+        let currentDeviceMode = 'desktop';
+        let desktopLabelPositions = {};
+        let mobileLabelPositions = {};
         let isDragging = false;
         let dragElement = null;
         let dragOffset = { x: 0, y: 0 };
@@ -647,8 +704,12 @@
             // Load jewellery position data first
             await loadJewelleryPositions();
             
-            // Load saved label positions
-            await loadLabelPositions();
+            // Load both desktop and mobile label positions
+            await loadLabelPositions('desktop');
+            await loadLabelPositions('mobile');
+            
+            // Set up device mode toggle
+            setupDeviceModeToggle();
             
             // Generate model grid for all communities
             generateModelGrid();
@@ -666,21 +727,74 @@
         });
 
         // Load saved label positions from server
-        async function loadLabelPositions() {
+        async function loadLabelPositions(deviceType = 'desktop') {
             try {
-                const response = await fetch('/api/jewellery/load-positions');
+                const response = await fetch(`/api/jewellery/load-positions?is_mobile=${deviceType === 'mobile'}`);
                 const data = await response.json();
                 
                 if (data.success) {
-                    labelPositions = data.positions;
-                    console.log('Loaded saved label positions:', labelPositions);
+                    if (deviceType === 'mobile') {
+                        mobileLabelPositions = data.positions;
+                        console.log('Loaded mobile label positions:', mobileLabelPositions);
+                    } else {
+                        desktopLabelPositions = data.positions;
+                        labelPositions = desktopLabelPositions; // Set as default
+                        console.log('Loaded desktop label positions:', desktopLabelPositions);
+                    }
                 } else {
-                    console.error('Failed to load label positions:', data.message);
+                    console.error(`Failed to load ${deviceType} label positions:`, data.message);
                 }
             } catch (error) {
-                console.error('Error loading label positions:', error);
-                labelPositions = {};
+                console.error(`Error loading ${deviceType} label positions:`, error);
+                if (deviceType === 'mobile') {
+                    mobileLabelPositions = {};
+                } else {
+                    desktopLabelPositions = {};
+                    labelPositions = {};
+                }
             }
+        }
+
+        // New function to handle device mode switching
+        function setupDeviceModeToggle() {
+            const deviceToggles = document.querySelectorAll('input[name="device-mode"]');
+            
+            deviceToggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        switchDeviceMode(this.value);
+                    }
+                });
+            });
+            
+            // Add device mode indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'device-mode-indicator';
+            indicator.id = 'device-mode-indicator';
+            indicator.textContent = 'Desktop Mode';
+            document.body.appendChild(indicator);
+        }
+
+        // Switch between desktop and mobile modes
+        function switchDeviceMode(mode) {
+            currentDeviceMode = mode;
+            const container = document.querySelector('.image-container');
+            const indicator = document.getElementById('device-mode-indicator');
+            
+            if (mode === 'mobile') {
+                container.classList.add('mobile-simulation');
+                indicator.textContent = 'Mobile Mode';
+                labelPositions = mobileLabelPositions;
+            } else {
+                container.classList.remove('mobile-simulation');
+                indicator.textContent = 'Desktop Mode';
+                labelPositions = desktopLabelPositions;
+            }
+            
+            // Reposition labels for the new mode
+            setTimeout(() => {
+                positionLabelsAndCreateLines();
+            }, 100);
         }
 
         // Setup drag functionality for labels
@@ -1070,7 +1184,8 @@
                     },
                     body: JSON.stringify({
                         model_image: currentModelData.image,
-                        positions: positions
+                        positions: positions,
+                        is_mobile: currentDeviceMode === 'mobile'
                     })
                 });
                 
@@ -1078,9 +1193,15 @@
                 
                 if (data.success) {
                     // Update local storage
+                    if (currentDeviceMode === 'mobile') {
+                        mobileLabelPositions[currentModelData.image] = positions;
+                    } else {
+                        desktopLabelPositions[currentModelData.image] = positions;
+                    }
                     labelPositions[currentModelData.image] = positions;
-                    alert('Label positions saved successfully!');
-                    console.log('Saved positions for', currentModelData.image, positions);
+                    
+                    alert(`${currentDeviceMode.charAt(0).toUpperCase() + currentDeviceMode.slice(1)} label positions saved successfully!`);
+                    console.log(`Saved ${currentDeviceMode} positions for`, currentModelData.image, positions);
                 } else {
                     alert('Failed to save positions: ' + data.message);
                 }

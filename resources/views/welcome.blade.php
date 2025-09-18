@@ -2625,15 +2625,21 @@
         // ========== NEW LABEL POSITIONING FUNCTIONS ==========
         let labelPositions = {}; // Store custom label positions
 
+        // Add device detection
+        function isMobileDevice() {
+            return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
         // Load saved label positions from server
         async function loadLabelPositions() {
             try {
-                const response = await fetch('/api/jewellery/load-positions');
+                const isMobile = isMobileDevice();
+                const response = await fetch(`/api/jewellery/load-positions?is_mobile=${isMobile}`);
                 const data = await response.json();
                 
                 if (data.success) {
                     labelPositions = data.positions;
-                    console.log('Loaded saved label positions:', labelPositions);
+                    console.log(`Loaded ${data.device} label positions:`, labelPositions);
                 } else {
                     console.error('Failed to load label positions:', data.message);
                 }
@@ -3081,11 +3087,26 @@
             // console.log(`Updated jewellery container class to: ${className}`);
         }
 
-        // Handle window resize to update lines
+        // Handle window resize to update lines and reload positions when switching between desktop/mobile
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            setTimeout(() => {
-                updateAllConnectingLines();
-            }, 100);
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(async () => {
+                const wasMobile = window.innerWidth <= 768;
+                const isMobileNow = isMobileDevice();
+                
+                // Only reload if device type changed
+                if (wasMobile !== isMobileNow) {
+                    await loadLabelPositions();
+                    // Reposition labels with new positions
+                    setTimeout(() => {
+                        positionLabelsAndCreateLines();
+                    }, 100);
+                } else {
+                    // Just update line positions for current device
+                    updateAllConnectingLines();
+                }
+            }, 250);
         });
 
     </script>

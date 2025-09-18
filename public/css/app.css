@@ -2288,6 +2288,24 @@ img.productDetails_img {
     font-size: 13px;
   }
 
+  /* Mobile-specific jewellery positioning */
+  .jewellery-label {
+    font-size: 0.7rem !important;
+    padding: 2px 4px !important;
+  }
+  
+  .jewellery-position {
+    width: 6px !important;
+    height: 6px !important;
+  }
+  
+  .connecting-line {
+    stroke-width: 1px !important;
+  }
+  
+  #jewellery-container {
+    max-width: 100%;
+  }
 
 }
 
