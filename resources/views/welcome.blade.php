@@ -360,8 +360,10 @@
             }
 
             .card-image {
-                /* height: 100%; */
-                object-fit:fill;
+
+                height: 100%;
+                object-fit: cover;
+
             }
 
             .jewelry-section {
@@ -405,7 +407,128 @@
         }
 
 
-</style>
+        /* Updated jewellery positioning styles - matching edit mode */
+        #jewellery-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        #jewellery-container .outfit-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        /* SVG for connecting lines */
+        .connecting-lines-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .connecting-line {
+            stroke: rgba(138, 35, 35, 0.6);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 5,5;
+        }
+
+        /* Jewellery Position Dots - Fixed positions */
+        .jewellery-position {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(138, 35, 35, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 8px rgba(138, 35, 35, 0.4);
+            z-index: 15;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        /* Static Labels (non-draggable) */
+        .jewellery-label {
+            position: absolute;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 6px;
+            padding: 4px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            user-select: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .jewellery-label:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Selected state styling */
+        .jewellery-label.selected {
+            background: rgba(138, 35, 35, 0.8);
+            border: 2px solid #8a2323;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .jewellery-label.selected:hover {
+            background: rgba(138, 35, 35, 0.9);
+        }
+
+        .jewellery-label input[type="checkbox"] {
+            margin: 0 5px 0 0;
+            width: 14px;
+            height: 14px;
+            accent-color: #8a2323;
+        }
+
+        .jewellery-label label {
+            margin: 0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        /* Selection counter styling */
+        .selection-counter {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Button disabled state */
+        .btn-custom:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-custom.opacity-50 {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+
+
+
 
 </head>
 
@@ -435,31 +558,32 @@
                                     <!-- Step 1 Form -->
                                     <form id="step1-form" class="mt-5">
                                         <div class="d-flex form-content mb-5 align-items-baseline">
-                                            <span class="mb-0 text-nowrap form-text">My Dream</span>
+                                            <span class="mb-0 text-nowrap form-text">I Am A</span>
                                             <select class="form-select border-bottom  py-0" required
                                                 id="language-select" aria-label="Select community" onchange="posthog.capture('region', { region: this.options[this.selectedIndex].text })">
-                                                <option selected>Tamil</option>
-                                                <option>Telugu</option>
-                                                <option>Gujarati</option>
-                                                <option>Bengali</option>
-                                                <option>Odia</option>
-                                                <option>Bihari</option>
-                                                <option>UP</option>
-                                                <option>Marwari</option>
-                                                <option>Punjabi</option>
-                                                <option>Marathi</option>
-                                                <option>Kannada</option>
-                                                <option>Jat</option>
-                                                <option>Rajput</option>
-                                                <option>Assamese</option>
-                                                <option>Manipuri</option>
-                                                <option>Malayalee</option>
-                                                <option>Kumaoni</option>
-                                                <option>Muslim</option>
+                                                <option selected>Tamil Bride</option>
+                                                <option>Telugu Bride</option>
+                                                <option>Gujarati Bride</option>
+                                                <option>Bengali Bride</option>
+                                                <option>Odia Bride</option>
+                                                <option>Bihari Bride</option>
+                                                <option>UP Bride</option>
+                                                <option>Marwari Bride</option>
+                                                <option>Punjabi Bride</option>
+                                                <option>Marathi Bride</option>
+                                                <option>Kannada Bride</option>
+                                                <option>Jat Bride</option>
+                                                <option>Rajput Bride</option>
+                                                <option>Assamese Bride</option>
+                                                <option>Manipuri Bride</option>
+                                                <option>Malayalee Bride</option>
+                                                <option>Kumaoni Bride</option>
+                                                <option>Muslim Bride</option>
                                             </select>
                                         </div>
 
                                         <div class="d-flex align-items-baseline mb-5">
+                                        <span class="mb-0 form-text">Planning for My</span>
                                             <select class="form-select border-bottom  me-3 py-0" required
                                                 id="event-select" aria-label="Select occasion" onchange="posthog.capture('occasion', { occasion: this.options[this.selectedIndex].text })">
                                                 <option selected>Mehendi</option>
@@ -470,12 +594,10 @@
                                                 <option>Reception</option>
                                                 <option>Wedding</option>
                                             </select>
-                                            <span class="mb-0 form-text">Checklist</span>
                                         </div>
 
                                         <div class="mx-auto d-flex justify-content-center justify-content-lg-start">
-                                            <button type="submit" class="btn rounded-5 mx-auto btn-custom" onclick="posthog.capture('choose-my-look')">Choose My
-                                                Look</button>
+                                            <button type="submit" class="btn rounded-5 mx-auto btn-custom" onclick="posthog.capture('choose-my-look')">Let’s Find My Perfect Look!</button>
                                         </div>
                                     </form>
                                 </div>
@@ -514,26 +636,26 @@
                         style="gap: 1.5rem;">
                         <div class="d-flex flex-row align-items-center g-2rem w-100">
                             <div class="d-flex flex-column flex-grow-1">
-                                <label for="dream-select-tablet" class="fw-semibold mb-1 text-start">My Dream:</label>
+                                <label for="dream-select-tablet" class="fw-semibold mb-1 text-start">I am A:</label>
                                 <select id="dream-select-tablet" class="form-select" onchange="posthog.capture('region', { region: this.options[this.selectedIndex].text })">
-                                    <option selected>Tamil</option>
-                                    <option>Telugu</option>
-                                    <option>Gujarati</option>
-                                    <option>Bengali</option>
-                                    <option>Odia</option>
-                                    <option>Bihari</option>
-                                    <option>UP</option>
-                                    <option>Marwari</option>
-                                    <option>Punjabi</option>
-                                    <option>Marathi</option>
-                                    <option>Kannada</option>
-                                    <option>Jat</option>
-                                    <option>Rajput</option>
-                                    <option>Assamese</option>
-                                    <option>Manipuri</option>
-                                    <option>Malayalee</option>
-                                    <option>Kumaoni</option>
-                                    <option>Muslim</option>
+                                    <option selected>Tamil Bride</option>
+                                    <option>Telugu Bride</option>
+                                    <option>Gujarati Bride</option>
+                                    <option>Bengali Bride</option>
+                                    <option>Odia Bride</option>
+                                    <option>Bihari Bride</option>
+                                    <option>UP Bride</option>
+                                    <option>Marwari Bride</option>
+                                    <option>Punjabi Bride</option>
+                                    <option>Marathi Bride</option>
+                                    <option>Kannada Bride</option>
+                                    <option>Jat Bride</option>
+                                    <option>Rajput Bride</option>
+                                    <option>Assamese Bride</option>
+                                    <option>Manipuri Bride</option>
+                                    <option>Malayalee Bride</option>
+                                    <option>Kumaoni Bride</option>
+                                    <option>Muslim Bride</option>
                                 </select>
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
@@ -550,10 +672,9 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary px-4 py-2 w-100" style="white-space:nowrap;" onclick="posthog.capture('choose-my-look')">Choose My
-                            Look</button>
+                        <button type="submit" class="btn btn-primary px-4 py-2 w-100" style="white-space:nowrap;" onclick="posthog.capture('choose-my-look')">Let’s Find My Perfect Look!</button>
                     </div>
-                    <input type="hidden" id="hidden-language-tablet" name="language" value="Tamil">
+                    <input type="hidden" id="hidden-language-tablet" name="language" value="Tamil Bride">
                     <input type="hidden" id="hidden-event-tablet" name="event" value="Mehendi">
                 </form>
             </div>
@@ -632,671 +753,128 @@
 
                     <div id="outfit-details-container" class="">
 
-                        <div id="lehanga-details" class="detail-section active">
-                            <h3 class="text-center fw-semibold mt-4">Lehanga Checklist</h3>
-                            <p class="text-center light-weight text-dark-gray mb-3 text-muted">Click on the jewellery
-                                you want to explore</p>
-                            <div class="animated-image-container position-relative">
-                                <img src="{{ asset('image/lehnga.png') }}" class="img-fluid outfit-img"
-                                    alt="Lehanga Model">
+                        <div id="outfit-details" class="detail-section active">
+                            <h3 id="outfit-title" class="text-center fw-semibold mt-4">Saree Checklist</h3>
+                            <p class="text-center light-weight text-dark-gray mb-1 text-muted">Click on the jewellery you want to explore</p>
+                            <!-- Add selection counter -->
+                            <p class="text-center mb-3">
+                                <small id="selection-count" class="text-muted selection-counter">0 item(s) selected</small>
+                            </p>
+                            <div class="animated-image-container position-relative telugu-saree" id="jewellery-container">
+                                <img src="{{ asset('image/bystate/telugu-saree.png') }}" class="img-fluid outfit-img"
+                                    alt="Outfit Model">
 
-                                <div class="jewellery-item lehanga-hair-jewellery">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="hair-jewellery-cb" name="jewellery_pieces"
-                                            value="hair-jewellery" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'hair-jewellery', model: 'model-1', page: 'form' })">
-                                        <label for="hair-jewellery-cb">Hair Jewellery</label>
-                                    </div>
+                                <!-- SVG for connecting lines -->
+                                <svg class="connecting-lines-svg" id="connecting-lines">
+                                    <!-- Lines will be drawn here -->
+                                </svg>
+
+                                <!-- Jewellery Position Dots -->
+                                <div class="jewellery-position" data-type="forehead-pendant"></div>
+                                <div class="jewellery-position" data-type="hair-jewellery"></div>
+                                <div class="jewellery-position" data-type="earrings-stud"></div>
+                                <div class="jewellery-position" data-type="earrings-drops"></div>
+                                <div class="jewellery-position" data-type="ear-loops"></div>
+                                <div class="jewellery-position" data-type="nose-pin"></div>
+                                <div class="jewellery-position" data-type="choker-necklace"></div>
+                                <div class="jewellery-position" data-type="short-necklace"></div>
+                                <div class="jewellery-position" data-type="long-necklace"></div>
+                                <div class="jewellery-position" data-type="multiple-bangles"></div>
+                                <div class="jewellery-position" data-type="bracelet"></div>
+                                <div class="jewellery-position" data-type="single-bangle"></div>
+                                <div class="jewellery-position" data-type="rings"></div>
+                                <div class="jewellery-position" data-type="waist-belt"></div>
+                                <div class="jewellery-position" data-type="anklet"></div>
+                                <div class="jewellery-position" data-type="toe-ring"></div>
+
+                                <!-- Static Labels (non-draggable) -->
+                                <div class="jewellery-label" data-type="forehead-pendant">
+                                    <input type="checkbox" id="forehead-pendant" class="jewellery-checkbox" value="forehead-pendant">
+                                    <label for="forehead-pendant">Forehead Pendant</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-forehead-pendant">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="forehead-pendant-cb" name="jewellery_pieces"
-                                            value="forehead-pendant" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'forehead-pendant', model: 'model-1', page: 'form' })">
-                                        <label for="forehead-pendant-cb">Forehead Pendant</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
+                                <div class="jewellery-label" data-type="hair-jewellery">
+                                    <input type="checkbox" id="hair-jewellery" class="jewellery-checkbox" value="hair-jewellery">
+                                    <label for="hair-jewellery">Hair Jewellery</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-earrings-stud">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-stud-cb" name="jewellery_pieces"
-                                            value="earrings-stud" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-stud', model: 'model-1', page: 'form' })">
-                                        <label for="earrings-stud-cb">Earrings - Stud</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="earrings-stud">
+                                    <input type="checkbox" id="earrings-stud" class="jewellery-checkbox" value="earrings-stud">
+                                    <label for="earrings-stud">Earrings - Stud</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-earrings-drops">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-drops-cb" name="jewellery_pieces"
-                                            value="earrings-drops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-drops', model: 'model-1', page: 'form' })">
-                                        <label for="earrings-drops-cb">Earrings - Drops</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="earrings-drops">
+                                    <input type="checkbox" id="earrings-drops" class="jewellery-checkbox" value="earrings-drops">
+                                    <label for="earrings-drops">Earrings - Drops</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-ear-loops">
-                                    <img src="{{ asset('image/pointers/right-long-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="ear-loops-cb" name="jewellery_pieces"
-                                            value="ear-loops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'ear-loops', model: 'model-1', page: 'form' })">
-                                        <label for="ear-loops-cb">Ear Loops</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="ear-loops">
+                                    <input type="checkbox" id="ear-loops" class="jewellery-checkbox" value="ear-loops">
+                                    <label for="ear-loops">Ear Loops</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-nose-pin">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="nose-pin-cb" name="jewellery_pieces"
-                                            value="nose-pin" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'nose-pin', model: 'model-1', page: 'form' })">
-                                        <label for="nose-pin-cb">Nose Pin</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
+                                <div class="jewellery-label" data-type="nose-pin">
+                                    <input type="checkbox" id="nose-pin" class="jewellery-checkbox" value="nose-pin">
+                                    <label for="nose-pin">Nose Pin</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-choker-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="choker-necklace-cb" name="jewellery_pieces"
-                                            value="choker-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'choker-necklace', model: 'model-1', page: 'form' })">
-                                        <label for="choker-necklace-cb">Choker Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
+                                <div class="jewellery-label" data-type="choker-necklace">
+                                    <input type="checkbox" id="choker-necklace" class="jewellery-checkbox" value="choker-necklace">
+                                    <label for="choker-necklace">Choker Necklace</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-short-necklace">
-                                    <img src="{{ asset('image/pointers/right-mid-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="short-necklace-cb" name="jewellery_pieces"
-                                            value="short-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'short-necklace', model: 'model-1', page: 'form' })">
-                                        <label for="short-necklace-cb">Short Necklace</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="short-necklace">
+                                    <input type="checkbox" id="short-necklace" class="jewellery-checkbox" value="short-necklace">
+                                    <label for="short-necklace">Short Necklace</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-long-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="long-necklace-cb" name="jewellery_pieces"
-                                            value="long-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'long-necklace', model: 'model-1', page: 'form' })">
-                                        <label for="long-necklace-cb">Long Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid-strt.png') }}" alt="">
+                                <div class="jewellery-label" data-type="long-necklace">
+                                    <input type="checkbox" id="long-necklace" class="jewellery-checkbox" value="long-necklace">
+                                    <label for="long-necklace">Long Necklace</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-multiple-bangles">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="multiple-bangles-cb" name="jewellery_pieces"
-                                            value="multiple-bangles" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'multiple-bangles', model: 'model-1', page: 'form' })">
-                                        <label for="multiple-bangles-cb">Multiple Bangles</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid.png') }}" alt="">
+                                <div class="jewellery-label" data-type="multiple-bangles">
+                                    <input type="checkbox" id="multiple-bangles" class="jewellery-checkbox" value="multiple-bangles">
+                                    <label for="multiple-bangles">Multiple Bangles</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-bracelet">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="bracelet-cb" name="jewellery_pieces"
-                                            value="bracelet" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'bracelet', model: 'model-1', page: 'form' })">
-                                        <label for="bracelet-cb">Bracelet</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="bracelet">
+                                    <input type="checkbox" id="bracelet" class="jewellery-checkbox" value="bracelet">
+                                    <label for="bracelet">Bracelet</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-single-bangle">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="single-bangle-cb" name="jewellery_pieces"
-                                            value="single-bangle" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'single-bangle', model: 'model-1', page: 'form' })">
-                                        <label for="single-bangle-cb">Single Bangle</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid-strt.png') }}" alt="">
+                                <div class="jewellery-label" data-type="single-bangle">
+                                    <input type="checkbox" id="single-bangle" class="jewellery-checkbox" value="single-bangle">
+                                    <label for="single-bangle">Single Bangle</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-rings">
-                                    <img src="{{ asset('image/pointers/right-mid-strt.png') }}" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="rings-cb" name="jewellery_pieces" value="rings"
-                                            class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'rings', model: 'model-1', page: 'form' })">
-                                        <label for="rings-cb">Rings</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="rings">
+                                    <input type="checkbox" id="rings" class="jewellery-checkbox" value="rings">
+                                    <label for="rings">Rings</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-waist-belt">
-                                    <img src="{{ asset('image/pointers/right-mid.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="waist-belt-cb" name="jewellery_pieces"
-                                            value="waist-belt" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'waist-belt', model: 'model-1', page: 'form' })">
-                                        <label for="waist-belt-cb">Waist Belt</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="waist-belt">
+                                    <input type="checkbox" id="waist-belt" class="jewellery-checkbox" value="waist-belt">
+                                    <label for="waist-belt">Waist Belt</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-anklet">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="anklet-cb" name="jewellery_pieces" value="anklet"
-                                            class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'anklet', model: 'model-1', page: 'form' })">
-                                        <label for="anklet-cb">Anklet</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="anklet">
+                                    <input type="checkbox" id="anklet" class="jewellery-checkbox" value="anklet">
+                                    <label for="anklet">Anklet</label>
                                 </div>
 
-                                <div class="jewellery-item lehanga-toe-ring">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="toe-ring-cb" name="jewellery_pieces"
-                                            value="toe-ring" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'toe-ring', model: 'model-1', page: 'form' })">
-                                        <label for="toe-ring-cb">Toe Ring</label>
-                                    </div>
+                                <div class="jewellery-label" data-type="toe-ring">
+                                    <input type="checkbox" id="toe-ring" class="jewellery-checkbox" value="toe-ring">
+                                    <label for="toe-ring">Toe Ring</label>
                                 </div>
                             </div>
                         </div>
 
-
-                        <div id="gown-details" class="detail-section ">
-                            <h3 class="text-center fw-semibold mt-4">Gown Checklist</h3>
-                            <p class="text-center light-weight text-dark-gray mb-3 text-muted">Click on the jewellery
-                                you want to explore</p>
-                            <div class="animated-image-container position-relative">
-                                <img src="{{ asset('image/gown.png') }}" class="img-fluid outfit-img"
-                                    alt="Lehanga Model">
-
-                                <div class="jewellery-item gown-hair-jewellery">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="hair-jewellery-gown" name="jewellery_pieces"
-                                            value="hair-jewellery" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'hair-jewellery', model: 'model-2', page: 'form' })">
-                                        <label for="hair-jewellery-gown">Hair Jewellery</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item gown-forehead-pendant">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="forehead-pendant-gown" name="jewellery_pieces"
-                                            value="forehead-pendant" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'forehead-pendant', model: 'model-2', page: 'form' })">
-                                        <label for="forehead-pendant-gown">Forehead Pendant</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item gown-earrings-stud">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-stud-gown" name="jewellery_pieces"
-                                            value="earrings-stud" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-stud', model: 'model-2', page: 'form' })">
-                                        <label for="earrings-stud-gown">Earrings - Stud</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item gown-earrings-drops">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-drops-gown" name="jewellery_pieces"
-                                            value="earrings-drops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-drops', model: 'model-2', page: 'form' })">
-                                        <label for="earrings-drops-gown">Earrings - Drops</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item gown-choker-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="choker-necklace-gown" name="jewellery_pieces"
-                                            value="choker-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'choker-necklace', model: 'model-2', page: 'form' })">
-                                        <label for="choker-necklace-gown">Choker Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item gown-ear-loops">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="ear-loops-gown" name="jewellery_pieces"
-                                            value="ear-loops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'ear-loops', model: 'model-2', page: 'form' })">
-                                        <label for="ear-loops-gown">Ear Loops</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item gown-nose-pin">
-                                     <img class="right-img mx-0 d-none d-md-block" src="{{ asset('image/pointers/right-long.png') }}" alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="nose-pin-gown" name="jewellery_pieces"
-                                            value="nose-pin" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'nose-pin', model: 'model-2', page: 'form' })">
-                                        <label for="nose-pin-gown">Nose Pin</label>
-                                    </div>
- <img class=" mx-0 d-block d-md-none" src="{{ asset('image/pointers/left-mid.png') }}" alt="">
-                                </div>
-
-
-                                <div class="jewellery-item gown-short-necklace">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="short-necklace-gown" name="jewellery_pieces"
-                                            value="short-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'short-necklace', model: 'model-2', page: 'form' })">
-                                        <label for="short-necklace-gown">Short Necklace</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item gown-long-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="long-necklace-gown" name="jewellery_pieces"
-                                            value="long-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'long-necklace', model: 'model-2', page: 'form' })">
-                                        <label for="long-necklace-gown">Long Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item gown-multiple-bangles">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="multiple-bangles-gown" name="jewellery_pieces"
-                                            value="multiple-bangles" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'multiple-bangles', model: 'model-2', page: 'form' })">
-                                        <label for="multiple-bangles-gown">Multiple Bangles</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item gown-bracelet">
-                                    <img src="{{ asset('image/pointers/right-mid.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="bracelet-gown" name="jewellery_pieces"
-                                            value="bracelet" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'bracelet', model: 'model-2', page: 'form' })">
-                                        <label for="bracelet-gown">Bracelet</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item gown-single-bangle">
-                                    <img class="right-img mx-0" src="{{ asset('image/pointers/right-mid-strt.png') }}" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="single-bangle-gown" name="jewellery_pieces"
-                                            value="single-bangle" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'single-bangle', model: 'model-2', page: 'form' })">
-                                        <label for="single-bangle-gown">Single Bangle</label>
-                                    </div>
-
-                                </div>
-
-                                <div class="jewellery-item gown-rings">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="rings-gown" name="jewellery_pieces"
-                                            value="rings" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'rings', model: 'model-2', page: 'form' })">
-                                        <label for="rings-gown">Rings</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
-
-                                </div>
-
-                                <div class="jewellery-item gown-waist-belt">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="waist-belt-gown" name="jewellery_pieces"
-                                            value="waist-belt" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'waist-belt', model: 'model-2', page: 'form' })">
-                                        <label for="waist-belt-gown">Waist Belt</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item gown-anklet">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="anklet-gown" name="jewellery_pieces"
-                                            value="anklet" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'anklet', model: 'model-2', page: 'form' })">
-                                        <label for="anklet-gown">Anklet</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item gown-toe-ring">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="toe-ring-gown" name="jewellery_pieces"
-                                            value="toe-ring" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'toe-ring', model: 'model-2', page: 'form' })">
-                                        <label for="toe-ring-gown">Toe Ring</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div id="saree-details" class="detail-section ">
-                            <h3 class="text-center fw-semibold mt-4">Saree Checklist</h3>
-                            <p class="text-center light-weight text-dark-gray mb-3 text-muted">Click on the jewellery
-                                you want to explore</p>
-                            <div class="animated-image-container position-relative">
-                                <img src="{{ asset('image/saree.png') }}" class="img-fluid outfit-img"
-                                    alt="Lehanga Model">
-
-                                <div class="jewellery-item saree-hair-jewellery">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="hair-jewellery-saree" name="jewellery_pieces"
-                                            value="hair-jewellery" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'hair-jewellery', model: 'model-3', page: 'form' })">
-                                        <label for="hair-jewellery-saree">Hair Jewellery</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-forehead-pendant">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="forehead-pendant-saree" name="jewellery_pieces"
-                                            value="forehead-pendant" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'forehead-pendant', model: 'model-3', page: 'form' })">
-                                        <label for="forehead-pendant-saree">Forehead Pendant</label>
-                                    </div>
-                                    <img class="mx-0" src="{{ asset('image/pointers/left-mid.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item saree-earrings-stud">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-stud-saree" name="jewellery_pieces"
-                                            value="earrings-stud" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-stud', model: 'model-3', page: 'form' })">
-                                        <label for="earrings-stud-saree">Earrings - Stud</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-earrings-drops">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-drops-saree" name="jewellery_pieces"
-                                            value="earrings-drops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-drops', model: 'model-3', page: 'form' })">
-                                        <label for="earrings-drops-saree">Earrings - Drops</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-ear-loops">
-                                    <img src="{{ asset('image/pointers/right-long.png') }}" class="right-img mx-0"
-                                        alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="ear-loops-saree" name="jewellery_pieces"
-                                            value="ear-loops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'ear-loops', model: 'model-3', page: 'form' })">
-                                        <label for="ear-loops-saree">Ear Loops</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-nose-pin">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="nose-pin-saree" name="jewellery_pieces"
-                                            value="nose-pin" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'nose-pin', model: 'model-3', page: 'form' })">
-                                        <label for="nose-pin-saree">Nose Pin</label>
-                                    </div>
-                                    <img class="mx-0" src="{{ asset('image/pointers/left-short.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item saree-choker-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="choker-necklace-saree" name="jewellery_pieces"
-                                            value="choker-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'choker-necklace', model: 'model-3', page: 'form' })">
-                                        <label for="choker-necklace-saree">Choker Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item saree-short-necklace">
-                                    <img src="{{ asset('image/pointers/right-long-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="short-necklace-saree" name="jewellery_pieces"
-                                            value="short-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'short-necklace', model: 'model-3', page: 'form' })">
-                                        <label for="short-necklace-saree">Short Necklace</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-long-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="long-necklace-saree" name="jewellery_pieces"
-                                            value="long-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'long-necklace', model: 'model-3', page: 'form' })">
-                                        <label for="long-necklace-saree">Long Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item saree-multiple-bangles">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="multiple-bangles-saree" name="jewellery_pieces"
-                                            value="multiple-bangles" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'multiple-bangles', model: 'model-3', page: 'form' })">
-                                        <label for="multiple-bangles-saree">Multiple Bangles</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item saree-bracelet">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="bracelet-saree" name="jewellery_pieces"
-                                            value="bracelet" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'bracelet', model: 'model-3', page: 'form' })">
-                                        <label for="bracelet-saree">Bracelet</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-single-bangle">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="single-bangle-saree" name="jewellery_pieces"
-                                            value="single-bangle" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'single-bangle', model: 'model-3', page: 'form' })">
-                                        <label for="single-bangle-saree">Single Bangle</label>
-                                    </div>
-                                    <img class="mx-0" src="{{ asset('image/pointers/left-mid-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item saree-rings">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="rings-saree" name="jewellery_pieces"
-                                            value="rings" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'rings', model: 'model-3', page: 'form' })">
-                                        <label for="rings-saree">Rings</label>
-                                    </div>
-                                     <img src="{{ asset('image/pointers/left-short-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item saree-waist-belt">
-                                    <img src="{{ asset('image/pointers/right-mid-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="waist-belt-saree" name="jewellery_pieces"
-                                            value="waist-belt" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'waist-belt', model: 'model-3', page: 'form' })">
-                                        <label for="waist-belt-saree">Waist Belt</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-anklet">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="anklet-saree" name="jewellery_pieces"
-                                            value="anklet" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'anklet', model: 'model-3', page: 'form' })">
-                                        <label for="anklet-saree">Anklet</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item saree-toe-ring">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0"
-                                        alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="toe-ring-saree" name="jewellery_pieces"
-                                            value="toe-ring" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'toe-ring', model: 'model-3', page: 'form' })">
-                                        <label for="toe-ring-saree">Toe Ring</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div id="anarkali-details" class="detail-section ">
-                            <h3 class="text-center fw-semibold mt-4">Anarkali Checklist</h3>
-                            <p class="text-center light-weight text-dark-gray mb-3 text-muted">Click on the jewellery
-                                you want to explore</p>
-                            <div class="animated-image-container position-relative">
-                                <img src="{{ asset('image/anarkali.png') }}" class="img-fluid outfit-img"
-                                    alt="Lehanga Model">
-
-                                <div class="jewellery-item anarkali-hair-jewellery">
-                                    <img src="{{ asset('image/pointers/right-mid.png') }}" class="right-img mx-0" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="hair-jewellery-anarkali" name="jewellery_pieces"
-                                            value="hair-jewellery" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'hair-jewellery', model: 'model-4', page: 'form' })">
-                                        <label for="hair-jewellery-anarkali">Hair Jewellery</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-forehead-pendant">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="forehead-pendant-anarkali" name="jewellery_pieces"
-                                            value="forehead-pendant" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'forehead-pendant', model: 'model-4', page: 'form' })">
-                                        <label for="forehead-pendant-anarkali">Forehead Pendant</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item anarkali-earrings-stud">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0" alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-stud-anarkali" name="jewellery_pieces"
-                                            value="earrings-stud" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-stud', model: 'model-4', page: 'form' })">
-                                        <label for="earrings-stud-anarkali">Earrings - Stud</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-earrings-drops">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="earrings-drops-anarkali" name="jewellery_pieces"
-                                            value="earrings-drops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'earrings-drops', model: 'model-4', page: 'form' })">
-                                        <label for="earrings-drops-anarkali">Earrings - Drops</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-ear-loops">
-                                    <img src="{{ asset('image/pointers/right-mid-strt.png') }}" class="right-img mx-0" alt="">
-
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="ear-loops-anarkali" name="jewellery_pieces"
-                                            value="ear-loops" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'ear-loops', model: 'model-4', page: 'form' })">
-                                        <label for="ear-loops-anarkali">Ear Loops</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-nose-pin">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="nose-pin-anarkali" name="jewellery_pieces"
-                                            value="nose-pin" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'nose-pin', model: 'model-4', page: 'form' })">
-                                        <label for="nose-pin-anarkali">Nose Pin</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-mid.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item anarkali-choker-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="choker-necklace-anarkali" name="jewellery_pieces"
-                                            value="choker-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'choker-necklace', model: 'model-4', page: 'form' })">
-                                        <label for="choker-necklace-anarkali">Choker Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item anarkali-short-necklace">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="short-necklace-anarkali" name="jewellery_pieces"
-                                            value="short-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'short-necklace', model: 'model-4', page: 'form' })">
-                                        <label for="short-necklace-anarkali">Short Necklace</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-long-necklace">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="long-necklace-anarkali" name="jewellery_pieces"
-                                            value="long-necklace" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'long-necklace', model: 'model-4', page: 'form' })">
-                                        <label for="long-necklace-anarkali">Long Necklace</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item anarkali-multiple-bangles">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="multiple-bangles-anarkali" name="jewellery_pieces"
-                                            value="multiple-bangles" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'multiple-bangles', model: 'model-4', page: 'form' })">
-                                        <label for="multiple-bangles-anarkali">Multiple Bangles</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short-strt.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item anarkali-bracelet">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="bracelet-anarkali" name="jewellery_pieces"
-                                            value="bracelet" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'bracelet', model: 'model-4', page: 'form' })">
-                                        <label for="bracelet-anarkali">Bracelet</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-single-bangle">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="single-bangle-anarkali" name="jewellery_pieces"
-                                            value="single-bangle" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'single-bangle', model: 'model-4', page: 'form' })">
-                                        <label for="single-bangle-anarkali">Single Bangle</label>
-                                    </div>
-                                    <img src="{{ asset('image/pointers/left-short.png') }}" alt="">
-                                </div>
-
-                                <div class="jewellery-item anarkali-rings">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="rings-anarkali" name="jewellery_pieces"
-                                            value="rings" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'rings', model: 'model-4', page: 'form' })">
-                                        <label for="rings-anarkali">Rings</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-waist-belt">
-                                    <img src="{{ asset('image/pointers/right-short.png') }}" class="right-img mx-0" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="waist-belt-anarkali" name="jewellery_pieces"
-                                            value="waist-belt" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'waist-belt', model: 'model-4', page: 'form' })">
-                                        <label for="waist-belt-anarkali">Waist Belt</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-anklet">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="anklet-anarkali" name="jewellery_pieces"
-                                            value="anklet" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'anklet', model: 'model-4', page: 'form' })">
-                                        <label for="anklet-anarkali">Anklet</label>
-                                    </div>
-                                </div>
-
-                                <div class="jewellery-item anarkali-toe-ring">
-                                    <img src="{{ asset('image/pointers/right-short-strt.png') }}" class="right-img mx-0" alt="">
-                                    <div class="jewellery-input">
-                                        <input type="checkbox" id="toe-ring-anarkali" name="jewellery_pieces"
-                                            value="toe-ring" class="jewellery-checkbox d-none" onclick="posthog.capture('category-selected', { category: 'toe-ring', model: 'model-4', page: 'form' })">
-                                        <label for="toe-ring-anarkali">Toe Ring</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
+                     </div>
 
                 <div class=" col-12 col-xl-10 d-flex px-4 mx-auto justify-content-center my-4">
 
-                    <button type="" onclick="nextStep(3)" class="btn border-2 rounded-5 btn-custom"  onclick="posthog.capture('choose-create-list', { page: 'form' })">Choose
+                    <button type="button" onclick="nextStep(3); posthog.capture('choose-create-list', { page: 'form' })" class="btn border-2 rounded-5 btn-custom">Choose
                         Create List</button>
 
                     {{-- <button class="btn btn-primary" onclick="nextStep(3)">Create List</button> --}}
@@ -1304,10 +882,15 @@
                 <div class="mt-4 text-center pt-4 fs-6 text-custom-dark opacity-75">
                     &copy; Powered by <a href="https://www.mirrar.com/" class="base-color"> mirrAR</a>
                 </div>
+                </div>
+              </div>
+    </div>
+    </div>
+    </div>
+
             </div>
         </div>
     </div>
-
 
     <!-- STEP 3 -->
     <div class="step-container container overflow-hidden" id="step3">
@@ -1381,9 +964,9 @@
 
                             <div class="">
                                 <button type="submit" name="recommended_products"
-                                    class="btn border border-2 rounded-5 btn-custom mb-2">Recommended Products</button>
+                                    class="btn border-2 rounded-5 btn-custom mb-2">Recommended Products</button>
                                 <button type="submit" name="full_catalogue"
-                                    class="btn border border-2 rounded-5 btn-custom mb-2">Explore Catalogue</button>
+                                    class="btn border-2 rounded-5 btn-custom mb-2">Explore Catalogue</button>
                             </div>
                         </div>
                     </form>
@@ -1427,6 +1010,7 @@
                 </div>
             </div>
         </div>
+
         <!-- OTP Modal -->
         <div id="otp-modal">
             <div class="otp-modal-content" style="position:relative;">
@@ -1491,7 +1075,9 @@
         <!-- reCAPTCHA container (hidden) -->
         <div id="recaptcha-container" class="d-none"></div>
     </div>
+ @php
 
+        @endphp
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -1571,13 +1157,46 @@
                     this.classList.add('active');
                     // Get outfit type
                     const outfitType = this.getAttribute('data-outfit');
-                    // Hide all detail sections
-                    document.querySelectorAll('.detail-section').forEach(section => section.style.display = 'none');
-                    // Show the selected outfit's details
-                    const detailsId = outfitType + '-details';
-                    const detailsSection = document.getElementById(detailsId);
-                    if (detailsSection) {
-                        detailsSection.style.display = 'block';
+
+                    // Update the main detail section
+                    const outfitDetails = document.getElementById('outfit-details');
+                    const outfitTitle = document.getElementById('outfit-title');
+                    const outfitImg = document.querySelector('#outfit-details .outfit-img');
+
+                    if (outfitDetails && outfitTitle && outfitImg && outfitType) {
+                        // Get current community from the language select
+                        const languageSelect = document.getElementById('language-select');
+                        const currentCommunity = languageSelect ? languageSelect.value : 'Tamil Bride';
+
+                        // Get the community mapping
+                        const mapping = communityModelMapping[currentCommunity];
+                        if (mapping) {
+                            // Find the slide data for this outfit type
+                            let slideData = null;
+                            Object.values(mapping).forEach(slide => {
+                                if (slide.outfit === outfitType) {
+                                    slideData = slide;
+                                }
+                            });
+
+                            if (slideData) {
+                                // Update image and title using the state-specific image
+                                const capitalizedOutfit = slideData.alt;
+                                outfitImg.src = `{{ asset('image/') }}/${slideData.png}`;
+                                outfitTitle.textContent = `${capitalizedOutfit} Checklist`;
+
+                                // Update jewellery positions for the selected outfit
+                                const fileName = slideData.png;
+                                updateJewelleryPositions(fileName);
+
+                                // Position labels and create connecting lines after image loads
+                                outfitImg.onload = () => {
+                                    setTimeout(() => {
+                                        positionLabelsAndCreateLines();
+                                    }, 100);
+                                };
+                            }
+                        }
                     }
                     // Scroll to details container
                     var detailsContainer = document.getElementById('outfit-details-container');
@@ -2186,7 +1805,9 @@
         // Update phone number in OTP modal
         function updatePhoneNumber(phone) {
             if (!phone) return;
-            const formatted = phone.replace(/(\d{2})(\d{4})(\d+)/, '+$1 $2 ••••');
+            // Remove any existing + sign and format properly
+            const cleanPhone = phone.replace(/^\+/, '');
+            const formatted = cleanPhone.replace(/(\d{2})(\d{4})(\d+)/, '+$1 $2 ••••');
             const phoneEl = document.getElementById('otp-phone-number');
             if (phoneEl) phoneEl.textContent = formatted;
         }
@@ -2256,7 +1877,7 @@
         }
 
         // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Your existing DOMContentLoaded code...
             // Initialize OTP modal
             initOTPModal();
@@ -2274,7 +1895,918 @@
 
             // Initialize phone verification
             setupPhoneVerification();
+
+            // Load saved label positions first
+            await loadLabelPositions();
+
+            // Load jewellery position data first, then set up community mapping
+            await loadJewelleryPositions();
+
+            // Community-based model mapping (this will set the correct default positions)
+            setupCommunityModelMapping();
+
+            // Initialize event options for default bride type
+            updateEventOptions('Tamil Bride');
+
+            // Label positioning is now handled by setupCommunityModelMapping()
+            // through image load events to ensure proper timing
         });
+
+        // Bride type to events mapping - defines which events to show for each bride type
+        const brideEventMapping = {
+            'Telugu Bride': ['Nishayathartham', 'Nalangu', 'Muhurtam', 'Reception'],
+            'Gujarati Bride': ['Gol Dhana', 'Sangeet', 'Wedding', 'Reception'],
+            'Tamil Bride': ['Nishayathartham', 'Pandakal Muhurtham', 'Kalyanam', 'Reception'],
+            'Marathi Bride': ['Sakharpuda', 'Haldi', 'Shaadi', 'Reception'],
+            'Bengali Bride': ['Aiburobhat', 'Gaye Holud', 'Wedding', 'Reception'],
+            'Punjabi Bride': ['Sagai', 'Haldi', 'Sangeet', 'Wedding', 'Reception'],
+            'UP Bride': ['Cheka', 'Mehendi', 'Wedding', 'Reception'],
+            'Bihari Bride': ['Cheka', 'Mehendi', 'Shaadi', 'Reception'],
+            'Kannada Bride': ['Nischay Tamulam', 'Naandi', 'Saptapadi', 'Reception'],
+            'Kannadiga Bride': ['Nischay Tamulam', 'Naandi', 'Saptapadi', 'Reception'],
+            'Jharkhand Bride': ['Haldi', 'Wedding', 'Reception'],
+            'Marwari Bride': ['Roka', 'Haldi', 'Mahira Dastoor', 'Wedding'],
+            'Marwadi Bride': ['Roka', 'Haldi', 'Mahira Dastoor', 'Wedding'],
+            'Odia Bride': ['Haldi', 'Wedding', 'Reception'],
+            'Odiya Bride': ['Haldi', 'Wedding', 'Reception'],
+            'Muslim Bride': ['Nikah', 'Mehendi', 'Reception'],
+            // Fallback for other bride types
+            'Jat Bride': ['Engagement', 'Mehendi', 'Wedding', 'Reception'],
+            'Rajput Bride': ['Engagement', 'Mehendi', 'Wedding', 'Reception'],
+            'Assamese Bride': ['Engagement', 'Mehendi', 'Wedding', 'Reception'],
+            'Manipuri Bride': ['Engagement', 'Mehendi', 'Wedding', 'Reception']
+        };
+
+        // Community to model mapping - defines which 4 models to show for each community
+        const communityModelMapping = {
+            'Tamil Bride': {
+                slide1: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/telugu-lehnga.png', png: 'bystate/telugu-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/tamil-gown.png', png: 'bystate/tamil-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Telugu Bride': {
+                slide1: { jpeg: 'bystate/telugu-lehnga.png', png: 'bystate/telugu-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/telugu-gown.png', png: 'bystate/telugu-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Gujarati Bride': {
+                slide1: { jpeg: 'bystate/gujarati-lehnga.png', png: 'bystate/gujarati-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide3: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Bengali Bride': {
+                slide1: { jpeg: 'bystate/bengali-saree.png', png: 'bystate/bengali-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/bengali-lehnga.png', png: 'bystate/bengali-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Odia Bride': {
+                slide1: { jpeg: 'bystate/odiya-saree.png', png: 'bystate/odiya-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/odiya-lehnga.png', png: 'bystate/odiya-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Bihari Bride': {
+                slide1: { jpeg: 'bystate/bihari-saree.png', png: 'bystate/bihari-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/bihari-lehnga.png', png: 'bystate/bihari-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'UP Bride': {
+                slide1: { jpeg: 'bystate/up-lehnga.png', png: 'bystate/up-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Marwari Bride': {
+                slide1: { jpeg: 'bystate/jharkhand-lehnga.png', png: 'bystate/jharkhand-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/jharkhand-saree.png', png: 'bystate/jharkhand-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/jharkhand-gown.png', png: 'bystate/jharkhand-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Marwadi Bride': {
+                slide1: { jpeg: 'bystate/jharkhand-lehnga.png', png: 'bystate/jharkhand-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/jharkhand-saree.png', png: 'bystate/jharkhand-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/jharkhand-gown.png', png: 'bystate/jharkhand-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Punjabi Bride': {
+                slide1: { jpeg: 'bystate/punjabi-lehnga.png', png: 'bystate/punjabi-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/punjabi-saree.png', png: 'bystate/punjabi-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Marathi Bride': {
+                slide1: { jpeg: 'bystate/marathi-saree.png', png: 'bystate/marathi-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/marathi-lehnga.png', png: 'bystate/marathi-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Kannada Bride': {
+                slide1: { jpeg: 'bystate/kannadiga-saree.png', png: 'bystate/kannadiga-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/kannadiga-lehnga.png', png: 'bystate/kannadiga-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/telugu-gown.png', png: 'bystate/telugu-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Kannadiga Bride': {
+                slide1: { jpeg: 'bystate/kannadiga-saree.png', png: 'bystate/kannadiga-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/kannadiga-lehnga.png', png: 'bystate/kannadiga-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/telugu-gown.png', png: 'bystate/telugu-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Jharkhand Bride': {
+                slide1: { jpeg: 'bystate/jharkhand-lehnga.png', png: 'bystate/jharkhand-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/jharkhand-saree.png', png: 'bystate/jharkhand-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/jharkhand-gown.png', png: 'bystate/jharkhand-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Jat Bride': {
+                slide1: { jpeg: 'bystate/up-lehnga.png', png: 'bystate/up-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Rajput Bride': {
+                slide1: { jpeg: 'bystate/up-lehnga.png', png: 'bystate/up-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Assamese Bride': {
+                slide1: { jpeg: 'bystate/bengali-saree.png', png: 'bystate/bengali-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/bengali-lehnga.png', png: 'bystate/bengali-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Manipuri Bride': {
+                slide1: { jpeg: 'bystate/bengali-saree.png', png: 'bystate/bengali-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide2: { jpeg: 'bystate/bengali-lehnga.png', png: 'bystate/bengali-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Malayalee Bride': {
+                slide1: { jpeg: 'bystate/tamil-gown.png', png: 'bystate/tamil-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide2: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/telugu-lehnga.png', png: 'bystate/telugu-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Kumaoni Bride': {
+                slide1: { jpeg: 'bystate/up-lehnga.png', png: 'bystate/up-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            },
+            'Muslim Bride': {
+                slide1: { jpeg: 'bystate/odiya-lehnga.png', png: 'bystate/odiya-lehnga.png', alt: 'Lehenga', outfit: 'lehnga' },
+                slide2: { jpeg: 'bystate/telugu-saree.png', png: 'bystate/telugu-saree.png', alt: 'Saree', outfit: 'saree' },
+                slide3: { jpeg: 'bystate/gujarati-gown.png', png: 'bystate/gujarati-gown.png', alt: 'Gown', outfit: 'gown' },
+                slide4: { jpeg: 'bystate/telugu-others.png', png: 'bystate/telugu-others.png', alt: 'Others', outfit: 'others' }
+            }
+        };
+
+        // Function to update event dropdown based on selected bride type
+        function updateEventOptions(brideType) {
+            const eventSelects = [
+                document.getElementById('event-select'),
+                document.getElementById('occasion-select-tablet')
+            ];
+
+            const events = brideEventMapping[brideType] || ['Engagement', 'Mehendi', 'Wedding', 'Reception'];
+
+            eventSelects.forEach(eventSelect => {
+                if (!eventSelect) return;
+
+                // Clear existing options
+                eventSelect.innerHTML = '';
+
+                // Add new options based on bride type
+                events.forEach((event, index) => {
+                    const option = document.createElement('option');
+                    option.value = event;
+                    option.textContent = event;
+                    if (index === 0) option.selected = true; // Select first option by default
+                    eventSelect.appendChild(option);
+                });
+            });
+        }
+
+        function setupCommunityModelMapping() {
+            const languageSelect = document.getElementById('language-select');
+            const tabletLanguageSelect = document.getElementById('dream-select-tablet');
+
+            // Function to update model images based on selected community
+            function updateModelImages(community) {
+                const mapping = communityModelMapping[community];
+                if (!mapping) return;
+
+                // Update swiper slide images
+                const slides = document.querySelectorAll('.swiper-slide');
+                slides.forEach((slide, index) => {
+                    const slideKey = `slide${index + 1}`;
+                    const slideData = mapping[slideKey];
+                    if (slideData) {
+                        const img = slide.querySelector('.card-image');
+                        const card = slide.querySelector('.jewelry-card');
+                        if (img) {
+                            img.src = `{{ asset('image/') }}/${slideData.jpeg}`;
+                            img.alt = slideData.alt;
+                        }
+                        if (card) {
+                            card.setAttribute('data-outfit', slideData.outfit);
+                        }
+                    }
+                });
+
+                // Update detail section images
+                // Find which slide contains each outfit type and update corresponding detail section
+                const outfitToDetailMapping = {
+                    'lehanga': 'details',
+                    'gown': 'details',
+                    'saree': 'details',
+                    'anarkali': 'details'
+                };
+
+                // Create mapping from outfit to slide data
+                const outfitSlideMapping = {};
+                Object.keys(mapping).forEach(slideKey => {
+                    const slideData = mapping[slideKey];
+                    outfitSlideMapping[slideData.outfit] = slideData;
+                });
+
+                // Update the main outfit detail section
+                const outfitDetails = document.getElementById('outfit-details');
+                const outfitTitle = document.getElementById('outfit-title');
+                const outfitImg = document.querySelector('#outfit-details .outfit-img');
+
+                if (outfitDetails && outfitTitle && outfitImg) {
+                    // Update with the first (active) slide's outfit
+                    const activeSlideData = mapping.slide1; // Always use the first slide as active
+                    outfitImg.src = `{{ asset('image/') }}/${activeSlideData.png}`;
+                    outfitTitle.textContent = `${activeSlideData.alt} Checklist`;
+
+                    // Update jewellery positions for the new image
+                    const fileName = `${activeSlideData.png}`;
+                    updateJewelleryPositions(fileName);
+
+                    // FIXED: Wait for image to load before positioning labels
+                    outfitImg.onload = () => {
+                        // Use requestAnimationFrame to ensure layout is complete
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                positionLabelsAndCreateLines();
+                            });
+                        });
+                    };
+
+                    // Handle case where image is already cached and loaded
+                    if (outfitImg.complete && outfitImg.naturalHeight !== 0) {
+                        // Use requestAnimationFrame to ensure layout is complete
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                positionLabelsAndCreateLines();
+                            });
+                        });
+                    }
+                }
+            }
+
+            // Initialize with default community (Tamil Bride)
+            updateModelImages('Tamil Bride');
+
+            // Add event listener for community changes
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function() {
+                    const selectedCommunity = this.value;
+                    updateModelImages(selectedCommunity);
+                    updateEventOptions(selectedCommunity);
+                });
+            }
+
+            // Add event listener for tablet community changes
+            if (tabletLanguageSelect) {
+                tabletLanguageSelect.addEventListener('change', function() {
+                    const selectedCommunity = this.value;
+                    updateEventOptions(selectedCommunity);
+                });
+            }
+        }
+
+        // ========== NEW LABEL POSITIONING FUNCTIONS ==========
+        let labelPositions = {}; // Store custom label positions
+
+        // Add device detection
+        function getDeviceType() {
+            return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+        }
+
+        // Load saved label positions from server
+        async function loadLabelPositions() {
+            try {
+                const response = await fetch('/api/jewellery/load-positions');
+                const data = await response.json();
+
+                if (data.success) {
+                    labelPositions = data.positions;
+                    console.log('Loaded saved label positions:', labelPositions);
+                } else {
+                    console.error('Failed to load label positions:', data.message);
+                }
+            } catch (error) {
+                console.error('Error loading label positions:', error);
+                labelPositions = {};
+            }
+        }
+
+        // Position labels and create connecting lines
+        function positionLabelsAndCreateLines() {
+            const jewelleryTypes = [
+                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
+                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
+                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
+                'rings', 'waist-belt', 'anklet', 'toe-ring'
+            ];
+
+            const rightSideTypes = [
+                'hair-jewellery', 'earrings-stud', 'earrings-drops', 'ear-loops',
+                'short-necklace', 'rings', 'bracelet', 'waist-belt', 'anklet', 'toe-ring'
+            ];
+
+            const svg = document.getElementById('connecting-lines');
+            if (svg) {
+                svg.innerHTML = ''; // Clear existing lines
+            }
+
+            // Get current model image path
+            const currentImageSrc = document.querySelector('#jewellery-container .outfit-img')?.src;
+            if (!currentImageSrc) return;
+
+            // Ensure container has proper dimensions before positioning
+            const container = document.getElementById('jewellery-container');
+            const containerRect = container.getBoundingClientRect();
+
+            if (containerRect.width === 0 || containerRect.height === 0) {
+                console.log('Container not ready, retrying...');
+                setTimeout(() => positionLabelsAndCreateLines(), 50);
+                return;
+            }
+
+            // Get current device type
+            const deviceType = getDeviceType();
+
+            // Extract image filename for saved positions lookup
+            const imagePath = currentImageSrc.split('/').pop();
+            const imagePositions = labelPositions[imagePath] || labelPositions[`bystate/${imagePath}`] || {};
+            const savedPositions = imagePositions[deviceType] || {};
+
+            jewelleryTypes.forEach(type => {
+                const positionDot = document.querySelector(`.jewellery-position[data-type="${type}"]`);
+                const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
+
+                if (positionDot && label) {
+
+                    let labelX, labelY;
+
+                    // Check if we have saved positions for this label
+                    if (savedPositions[type]) {
+                        // Use saved positions (convert from percentage to pixels)
+                        labelX = (savedPositions[type].x / 100) * containerRect.width;
+                        labelY = (savedPositions[type].y / 100) * containerRect.height;
+                        console.log(`Using saved ${deviceType} position for ${type}:`, savedPositions[type]);
+                    } else {
+                        // Use default positioning logic
+                        const isRightSide = rightSideTypes.includes(type);
+                        const offsetDistance = 100; // Distance from the dot
+
+                        const dotRect = positionDot.getBoundingClientRect();
+                        const dotX = dotRect.left - containerRect.left + dotRect.width / 2;
+                        const dotY = dotRect.top - containerRect.top + dotRect.height / 2;
+
+                        if (isRightSide) {
+                            labelX = dotX + offsetDistance;
+                            labelY = dotY - label.offsetHeight / 2;
+                        } else {
+                            labelX = dotX - offsetDistance - label.offsetWidth;
+                            labelY = dotY - label.offsetHeight / 2;
+                        }
+                        console.log(`Using default position for ${type}`);
+                    }
+
+                    // Constrain within container
+                    labelX = Math.max(0, Math.min(labelX, containerRect.width - label.offsetWidth));
+                    labelY = Math.max(0, Math.min(labelY, containerRect.height - label.offsetHeight));
+
+                    label.style.left = labelX + 'px';
+                    label.style.top = labelY + 'px';
+
+                    // Create connecting line
+                    if (svg) {
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.id = `line-${type}`;
+                        line.classList.add('connecting-line');
+                        svg.appendChild(line);
+
+                        // Update line position
+                        updateConnectingLine(type);
+                    }
+                }
+            });
+        }
+
+        // Update connecting line between position dot and label
+        function updateConnectingLine(jewelleryType) {
+            const positionDot = document.querySelector(`.jewellery-position[data-type="${jewelleryType}"]`);
+            const label = document.querySelector(`.jewellery-label[data-type="${jewelleryType}"]`);
+            const line = document.querySelector(`#line-${jewelleryType}`);
+
+            if (!positionDot || !label || !line) return;
+
+            const container = document.getElementById('jewellery-container');
+            const containerRect = container.getBoundingClientRect();
+
+            // Get position dot center
+            const dotRect = positionDot.getBoundingClientRect();
+            const dotX = dotRect.left - containerRect.left + dotRect.width / 2;
+            const dotY = dotRect.top - containerRect.top + dotRect.height / 2;
+
+            // Get label center
+            const labelRect = label.getBoundingClientRect();
+            const labelX = labelRect.left - containerRect.left + labelRect.width / 2;
+            const labelY = labelRect.top - containerRect.top + labelRect.height / 2;
+
+            // Update line
+            line.setAttribute('x1', dotX);
+            line.setAttribute('y1', dotY);
+            line.setAttribute('x2', labelX);
+            line.setAttribute('y2', labelY);
+        }
+
+        // Update all connecting lines
+        function updateAllConnectingLines() {
+            const jewelleryTypes = [
+                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
+                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
+                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
+                'rings', 'waist-belt', 'anklet', 'toe-ring'
+            ];
+
+            jewelleryTypes.forEach(type => {
+                updateConnectingLine(type);
+            });
+        }
+        // ========== END NEW LABEL POSITIONING FUNCTIONS ==========
+
+        // Load jewellery position data and generate dynamic CSS
+        //
+        // HOW TO ADD NEW IMAGES:
+        // 1. Create a new annotation file (e.g., /public/data/mynewimage-annotations.json)
+        // 2. Add the file path to the knownFiles array below
+        // 3. Update the community mapping in communityModelMapping to reference your new image
+        // 4. The system will automatically handle positioning for the new image!
+        //
+        async function loadJewelleryPositions() {
+            try {
+                // Try to automatically discover annotation files, with fallback to known files
+                let annotationFiles = [];
+
+                // First, try to get list of files from the server (if we implement this endpoint)
+                // For now, use the known files list and make it easy to extend
+                const knownFiles = [
+                    '/data/jewellery-positions.json', // Fallback to clean format
+                    '/data/lehnga-annotations.json',   // Lehnga positioning data
+                    '/data/saree-annotations.json',    // Saree positioning data (contains both lehnga and saree)
+                    '/data/gown-annotations.json',     // Gown positioning data
+                    '/data/anarkali-annotations.json', // Anarkali positioning data
+                    '/data/new-annotations.json',      // New image positioning data
+
+                    // State-specific annotation files
+                    '/data/telegu-saree-annotations.json', // Telugu saree specific positioning
+                    '/data/telugu-lehnga-annotations.json',
+                    '/data/telugu-gown-annotations.json',
+                    '/data/gujarati-lehnga-annotations.json',
+                    '/data/gujarati-gown-annotations.json',
+                    '/data/bengali-lehnga-annotations.json',
+                    '/data/bengali-saree-annotations.json',
+                    '/data/punjabi-lehnga-annotations.json',
+                    '/data/punjabi-saree-annotations.json',
+                    '/data/marathi-lehnga-annotations.json',
+                    '/data/marathi-saree-annotations.json',
+                    '/data/tamil-gown-annotations.json',
+                    '/data/bihari-lehnga-annotations.json',
+                    '/data/bihari-saree-annotations.json',
+                    '/data/kannadiga-lehnga-annotations.json',
+                    '/data/kannadiga-saree-annotations.json',
+                    '/data/jharkhand-lehnga-annotations.json',
+                    '/data/jharkhand-saree-annotations.json',
+                    '/data/jharkhand-gown-annotations.json',
+                    '/data/odiya-lehnga-annotations.json',
+                    '/data/odiya-saree-annotations.json',
+                    '/data/up-lehnga-annotations.json'
+                ];
+
+                // All annotation files are now in knownFiles
+                annotationFiles = knownFiles;
+
+                let positionData = {};
+                let loadedCount = 0;
+
+                for (const file of annotationFiles) {
+                    try {
+                        const response = await fetch(file);
+                        const data = await response.json();
+
+                        // Check if it's annotation format or clean format
+                        if (Array.isArray(data) && data[0] && data[0].file_upload) {
+                            // Parse annotation format
+                            console.log(`Loading annotation file: ${file}`);
+                            const parsed = parseAnnotationData(data);
+                            positionData = { ...positionData, ...parsed };
+                            loadedCount++;
+                        } else if (typeof data === 'object' && !Array.isArray(data)) {
+                            // Use clean format directly
+                            console.log(`Loading clean format file: ${file}`);
+                            positionData = { ...positionData, ...data };
+                            loadedCount++;
+                        }
+                    } catch (fileError) {
+                        console.log(`Could not load ${file}:`, fileError.message);
+                    }
+                }
+
+                console.log(`Loaded ${loadedCount} position data files`);
+                console.log('Position data keys:', Object.keys(positionData));
+
+                // Generate CSS for each image and jewellery combination
+                generateJewelleryCSSRules(positionData);
+
+                // Don't initialize positions here - they are handled by setupCommunityModelMapping()
+                // which calls updateModelImages('Tamil Bride') and sets the correct jewellery positions
+
+            } catch (error) {
+                console.error('Failed to load jewellery positions:', error);
+                // Fallback to default positioning
+            }
+        }
+
+        // Parse annotation data format into clean position data
+        function parseAnnotationData(annotationArray) {
+            const positionData = {};
+
+            annotationArray.forEach(item => {
+                if (!item.file_upload || !item.annotations || !item.annotations[0]) {
+                    return;
+                }
+
+                // Extract image name from file_upload (e.g., "84716555-lahnga.jpeg")
+                const fileUpload = item.file_upload;
+                const imageName = extractImageName(fileUpload);
+
+                // console.log(`Processing annotation: ${fileUpload} -> ${imageName}`);
+
+                if (!imageName) return;
+
+                // Parse annotations to extract coordinates
+                const annotation = item.annotations[0];
+                if (!annotation.result) return;
+
+                const positions = {};
+
+                annotation.result.forEach(point => {
+                    if (!point.value || !point.value.keypointlabels || !point.value.keypointlabels[0]) {
+                        return;
+                    }
+
+                    const jewelleryType = point.value.keypointlabels[0];
+                    const x = point.value.x;
+                    const y = point.value.y;
+
+                    positions[jewelleryType] = { x, y };
+                });
+
+                positionData[imageName] = positions;
+                // console.log(`Added ${Object.keys(positions).length} jewellery items for ${imageName}:`, positions);
+            });
+
+            return positionData;
+        }
+
+        // Extract image name from file upload and map to bystate PNG format
+        function extractImageName(fileUpload) {
+            // Extract base name from file upload (e.g., "84716555-lahnga.jpeg" -> "lahnga")
+            const fileName = fileUpload.split('/').pop(); // Get filename from path
+
+            // Remove ID prefix and get the actual name (e.g., "84716555-lahnga.jpeg" -> "lahnga.jpeg")
+            const baseName = fileName.replace(/^[a-f0-9-]+-/, ''); // Remove alphanumeric prefix and dash
+
+            // console.log(`extractImageName: ${fileUpload} -> ${fileName} -> ${baseName}`);
+
+            // Map to actual bystate PNG file names used in the system
+            const nameMapping = {
+                // Generic mappings (fallback)
+                'lahnga.jpeg': 'lehnga.png',
+                'gown.jpeg': 'gown.png',
+                'saree.jpeg': 'saree.png',
+                'saree.png': 'saree.png',
+                'anarkali.jpeg': 'anarkali.png',
+                'new.jpeg': 'new.png',
+                'new.png': 'new.png',
+
+                // State-specific mappings (priority) - handle both formats
+                'telugu-saree.png': 'bystate/telugu-saree.png',
+                'telugu-lehnga.png': 'bystate/telugu-lehnga.png',
+                'telugu-gown.png': 'bystate/telugu-gown.png',
+                'gujarati-lehnga.png': 'bystate/gujarati-lehnga.png',
+                'gujarati-gown.png': 'bystate/gujarati-gown.png',
+                'bengali-lehnga.png': 'bystate/bengali-lehnga.png',
+                'bengali-saree.png': 'bystate/bengali-saree.png',
+                'punjabi-lehnga.png': 'bystate/punjabi-lehnga.png',
+                'punjabi-saree.png': 'bystate/punjabi-saree.png',
+                'marathi-lehnga.png': 'bystate/marathi-lehnga.png',
+                'marathi-saree.png': 'bystate/marathi-saree.png',
+                'tamil-gown.png': 'bystate/tamil-gown.png',
+                'bihari-lehnga.png': 'bystate/bihari-lehnga.png',
+                'bihari-saree.png': 'bystate/bihari-saree.png',
+                'kannadiga-lehnga.png': 'bystate/kannadiga-lehnga.png',
+                'kannadiga-saree.png': 'bystate/kannadiga-saree.png',
+                'jharkhand-lehnga.png': 'bystate/jharkhand-lehnga.png',
+                'jharkhand-saree.png': 'bystate/jharkhand-saree.png',
+                'jharkhand-gown.png': 'bystate/jharkhand-gown.png',
+                'odiya-lehnga.png': 'bystate/odiya-lehnga.png',
+                'odiya-saree.png': 'bystate/odiya-saree.png',
+                'up-lehnga.png': 'bystate/up-lehnga.png'
+            };
+
+            // For future images, automatically convert extensions and handle dynamic mapping
+            let result = nameMapping[baseName];
+            if (!result) {
+                // Check if this is a state-specific image name pattern
+                if (baseName.includes('-') && (baseName.includes('saree') || baseName.includes('lehnga') || baseName.includes('gown'))) {
+                    // This looks like a state-specific image, map it to bystate directory
+                    result = `bystate/${baseName}`;
+                } else {
+                    // Dynamic mapping: replace .jpeg with .png, keep .png as is
+                    result = baseName.replace(/\.jpeg$/, '.png');
+                }
+            }
+
+            // console.log(`Final mapping: ${baseName} -> ${result}`);
+            return result;
+        }
+
+        // Generate CSS rules for jewellery positioning (updated for new label system)
+        function generateJewelleryCSSRules(positionData) {
+            const style = document.createElement('style');
+            style.id = 'dynamic-jewellery-css';
+
+            let cssRules = `
+                /* Ensure outfit-details centers its children */
+                #outfit-details {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                }
+
+                /* Center the animated-image-container horizontally within outfit-details */
+                #outfit-details .animated-image-container {
+                    margin: 0 auto;
+                    display: flex;
+                    justify-content: center;
+                    width: 100%;
+                    max-width: 500px; /* Optional: limit max width */
+                }
+
+                /* Ensure the image container is the positioning context and matches image size */
+                #jewellery-container {
+                    position: relative;
+                    display: inline-block;
+                    width: 100%;
+                    margin: 0 auto;
+                }
+
+                /* Image should fill the container completely */
+                #jewellery-container .outfit-img {
+                    display: block;
+                    width: 100%;
+                    height: auto;
+                    position: relative;
+                }
+            `;
+
+            // Generate CSS classes for each image type - positioning the dots
+            Object.keys(positionData).forEach(imageFileName => {
+                const positions = positionData[imageFileName];
+                // Create sanitized class name by removing file extension and bystate path
+                let sanitizedClassName = imageFileName.replace(/\.[^/.]+$/, "");
+
+                // Handle bystate paths: "bystate/telugu-saree.png" -> "telugu-saree"
+                if (sanitizedClassName.includes('bystate/')) {
+                    sanitizedClassName = sanitizedClassName.replace('bystate/', '');
+                }
+
+                // console.log(`Generating CSS for image: ${imageFileName} -> class: ${sanitizedClassName}`);
+
+                Object.keys(positions).forEach(jewelleryType => {
+                    const position = positions[jewelleryType];
+
+                    // Position the dots using the annotation data
+                    const cssRule = `
+                        #jewellery-container.${sanitizedClassName} .jewellery-position[data-type="${jewelleryType}"] {
+                            left: ${position.x}%;
+                            top: ${position.y}%;
+                        }
+                    `;
+                    cssRules += cssRule;
+                    // console.log(`Generated CSS rule: #jewellery-container.${sanitizedClassName} .jewellery-position[data-type="${jewelleryType}"]`);
+                });
+            });
+
+            style.textContent = cssRules;
+            document.head.appendChild(style);
+        }
+
+        // Update jewellery positions for specific image type
+        function updateJewelleryPositions(imageTypeOrFileName) {
+            const container = document.getElementById('jewellery-container');
+            if (!container) return;
+
+            // Remove all existing image type classes
+            const imageTypes = ['lehnga', 'gown', 'saree', 'anarkali', 'others'];
+            // Also remove state-specific classes
+            const stateSpecificClasses = ['telugu-saree', 'telugu-lehnga', 'telugu-gown', 'gujarati-lehnga', 'gujarati-gown',
+                                        'bengali-lehnga', 'bengali-saree', 'punjabi-lehnga', 'punjabi-saree',
+                                        'marathi-lehnga', 'marathi-saree', 'tamil-gown', 'bihari-lehnga', 'bihari-saree',
+                                        'kannadiga-lehnga', 'kannadiga-saree', 'jharkhand-lehnga', 'jharkhand-saree',
+                                        'jharkhand-gown', 'odiya-lehnga', 'odiya-saree', 'up-lehnga'];
+
+            [...imageTypes, ...stateSpecificClasses].forEach(type => container.classList.remove(type));
+
+            // Extract the appropriate class name from the image path
+            let className = imageTypeOrFileName;
+
+            // Handle bystate paths (e.g., "bystate/telugu-saree.png" -> "telugu-saree")
+            if (className.includes('bystate/')) {
+                const fileName = className.split('/').pop(); // Get filename from path
+                className = fileName.replace(/\.[^/.]+$/, ""); // Remove extension: "telugu-saree.png" -> "telugu-saree"
+            } else {
+                // Handle regular paths (remove extension)
+                className = className.includes('.') ?
+                    className.replace(/\.[^/.]+$/, "") :
+                    className;
+            }
+
+            // Add new image type class
+            container.classList.add(className);
+            // console.log(`Updated jewellery container class to: ${className}`);
+        }
+
+        // Handle window resize to update lines and device changes
+        window.addEventListener('resize', debounce(() => {
+            positionLabelsAndCreateLines();
+        }, 250));
+
+        // Debounce utility function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Multi-selection functionality for jewellery labels
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup jewellery selection functionality
+            function setupJewellerySelection() {
+                const jewelleryLabels = document.querySelectorAll('.jewellery-label');
+
+                jewelleryLabels.forEach(label => {
+                    label.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const checkbox = this.querySelector('.jewellery-checkbox');
+
+                        if (checkbox) {
+                            // Toggle checkbox state
+                            checkbox.checked = !checkbox.checked;
+
+                            // Toggle visual state
+                            if (checkbox.checked) {
+                                this.classList.add('selected');
+                                // Trigger PostHog event
+                                if (typeof posthog !== 'undefined') {
+                                    const category = checkbox.value || this.getAttribute('data-type');
+                                    const activeOutfit = document.querySelector('.jewelry-card.active');
+                                    const model = activeOutfit ? activeOutfit.getAttribute('data-outfit') : 'unknown';
+                                    posthog.capture('category-selected', {
+                                        category: category,
+                                        model: model,
+                                        page: 'form',
+                                        action: 'selected'
+                                    });
+                                }
+                            } else {
+                                this.classList.remove('selected');
+                                // Trigger PostHog event for deselection
+                                if (typeof posthog !== 'undefined') {
+                                    const category = checkbox.value || this.getAttribute('data-type');
+                                    const activeOutfit = document.querySelector('.jewelry-card.active');
+                                    const model = activeOutfit ? activeOutfit.getAttribute('data-outfit') : 'unknown';
+                                    posthog.capture('category-deselected', {
+                                        category: category,
+                                        model: model,
+                                        page: 'form',
+                                        action: 'deselected'
+                                    });
+                                }
+                            }
+
+                            // Update selection count display
+                            updateSelectionCount();
+                        }
+                    });
+
+                    // Also handle direct checkbox clicks
+                    const checkbox = label.querySelector('.jewellery-checkbox');
+                    if (checkbox) {
+                        checkbox.addEventListener('change', function(e) {
+                            e.stopPropagation();
+
+                            if (this.checked) {
+                                label.classList.add('selected');
+                            } else {
+                                label.classList.remove('selected');
+                            }
+
+                            updateSelectionCount();
+                        });
+                    }
+                });
+            }
+
+            // Update selection count
+            function updateSelectionCount() {
+                const selectedCount = document.querySelectorAll('.jewellery-checkbox:checked').length;
+                const countDisplay = document.getElementById('selection-count');
+                if (countDisplay) {
+                    countDisplay.textContent = `${selectedCount} item(s) selected`;
+                }
+
+                // Enable/disable next button based on selection
+                const nextButton = document.querySelector('button[onclick="nextStep(3)"]');
+                if (nextButton) {
+                    if (selectedCount > 0) {
+                        nextButton.disabled = false;
+                        nextButton.classList.remove('opacity-50');
+                    } else {
+                        nextButton.disabled = true;
+                        nextButton.classList.add('opacity-50');
+                    }
+                }
+            }
+
+            // Clear all selections when outfit changes
+            function clearAllSelections() {
+                const checkboxes = document.querySelectorAll('.jewellery-checkbox');
+                const labels = document.querySelectorAll('.jewellery-label');
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                labels.forEach(label => {
+                    label.classList.remove('selected');
+                });
+
+                updateSelectionCount();
+            }
+
+            // Initialize selection functionality
+            setupJewellerySelection();
+
+            // Reset selections when outfit changes (attach to existing outfit card click handlers)
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.jewelry-card')) {
+                    // Optional: Clear selections when changing outfits
+                    // Uncomment the next line if you want to clear selections on outfit change
+                    // clearAllSelections();
+                }
+            });
+
+            // Initialize selection count
+            updateSelectionCount();
+
+            // Make updateSelectionCount available globally for other functions
+            window.updateSelectionCount = updateSelectionCount;
+        });
+
     </script>
 </body>
 
