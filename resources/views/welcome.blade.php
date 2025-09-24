@@ -437,7 +437,8 @@
             stroke: rgba(138, 35, 35, 0.6);
             stroke-width: 2;
             fill: none;
-            stroke-dasharray: 5,5;
+            /* Make the connecting line solid for selected items */
+            stroke-dasharray: none;
         }
 
         /* Jewellery Position Dots - Fixed positions */

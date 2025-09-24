@@ -134,7 +134,8 @@
             stroke: rgba(138, 35, 35, 0.6);
             stroke-width: 2;
             fill: none;
-            stroke-dasharray: 5,5;
+            /* Use solid line */
+            stroke-dasharray: none;
         }
 
         /* Jewellery Position Dots - Fixed positions */
@@ -245,7 +246,8 @@
             stroke: rgba(138, 35, 35, 0.6);
             stroke-width: 1.5;
             fill: none;
-            stroke-dasharray: 3,3;
+            /* Solid line on mobile preview as well */
+            stroke-dasharray: none;
         }
 
         .jewellery-list {
@@ -301,12 +303,12 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            
+
             .model-grid {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 1rem;
             }
-            
+
             .model-card img {
                 height: 200px;
             }
@@ -374,12 +376,12 @@
                     <div class="text-center">
                         <div class="image-container" id="jewellery-container">
                             <img src="" alt="Model" class="model-image" id="current-model-image">
-                            
+
                             <!-- SVG for connecting lines -->
                             <svg class="connecting-lines-svg" id="connecting-lines">
                                 <!-- Lines will be drawn here -->
                             </svg>
-                            
+
                             <!-- Jewellery Position Dots -->
                             <div class="jewellery-position" data-type="forehead-pendant"></div>
                             <div class="jewellery-position" data-type="hair-jewellery"></div>
@@ -397,7 +399,7 @@
                             <div class="jewellery-position" data-type="waist-belt"></div>
                             <div class="jewellery-position" data-type="anklet"></div>
                             <div class="jewellery-position" data-type="toe-ring"></div>
-                            
+
                             <!-- Draggable Labels -->
                             <div class="jewellery-label" data-type="forehead-pendant">
                                 <input type="checkbox" id="edit-forehead-pendant" class="jewellery-checkbox" checked>
@@ -484,20 +486,20 @@
                     <!-- Controls Panel -->
                     <div class="controls-panel">
                         <h4 class="controls-title">Jewellery Controls</h4>
-                        
+
                         <!-- Device Type Toggle -->
                         <div class="mb-3 p-3 border rounded">
                             <h6 class="mb-2">Device Preview</h6>
                             <div class="btn-group w-100" role="group">
                                 <input type="radio" class="btn-check" name="device-type" id="device-desktop" value="desktop" checked>
                                 <label class="btn btn-outline-primary" for="device-desktop">Desktop</label>
-                                
+
                                 <input type="radio" class="btn-check" name="device-type" id="device-mobile" value="mobile">
                                 <label class="btn btn-outline-primary" for="device-mobile">Mobile</label>
                             </div>
                             <small class="text-muted d-block mt-1">Switch between desktop and mobile label positioning</small>
                         </div>
-                        
+
                         <div class="mb-3">
                             <small class="text-muted">Drag labels to reposition. Red dots show jewellery positions.</small>
                         </div>
@@ -615,7 +617,7 @@
                                 <div class="visibility-indicator visible"></div>
                             </li>
                         </ul>
-                        
+
                         <div class="mt-4 pt-3 border-top">
                             <button class="btn btn-custom w-100 mb-2" onclick="showAllJewellery()">Show All</button>
                             <button class="btn btn-outline-secondary w-100 mb-2" onclick="hideAllJewellery()">Hide All</button>
@@ -702,22 +704,22 @@
         document.addEventListener('DOMContentLoaded', async function() {
             // Load jewellery position data first
             await loadJewelleryPositions();
-            
+
             // Load saved label positions
             await loadLabelPositions();
-            
+
             // Generate model grid for all communities
             generateModelGrid();
-            
+
             // Set up jewellery toggle controls
             setupJewelleryControls();
-            
+
             // Setup drag functionality
             setupDragFunctionality();
-            
+
             // Setup device type switching
             setupDeviceSwitching();
-            
+
             // Select first model by default
             if (currentModels.length > 0) {
                 selectModel(currentModels[0]);
@@ -729,7 +731,7 @@
             try {
                 const response = await fetch('/api/jewellery/load-positions');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     labelPositions = data.positions;
                     console.log('Loaded saved label positions:', labelPositions);
@@ -745,7 +747,7 @@
         // Setup device type switching
         function setupDeviceSwitching() {
             const deviceRadios = document.querySelectorAll('input[name="device-type"]');
-            
+
             deviceRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     currentDeviceType = this.value;
@@ -757,13 +759,13 @@
 
         function switchDevicePreview(deviceType) {
             const container = document.getElementById('jewellery-container');
-            
+
             if (deviceType === 'mobile') {
                 container.classList.add('mobile-preview');
             } else {
                 container.classList.remove('mobile-preview');
             }
-            
+
             // Use requestAnimationFrame to ensure DOM updates are complete
             requestAnimationFrame(() => {
                 setTimeout(() => {
@@ -772,11 +774,11 @@
                     if (svg) {
                         svg.innerHTML = '';
                     }
-                    
+
                     // Force a reflow by reading container dimensions
                     const containerRect = container.getBoundingClientRect();
                     console.log(`Container dimensions after ${deviceType} switch:`, containerRect.width, 'x', containerRect.height);
-                    
+
                     // Recalculate and redraw everything
                     positionLabelsAndCreateLines();
                 }, 200); // Increased timeout
@@ -785,26 +787,26 @@
 
         function loadPositionsForDevice(deviceType) {
             if (!currentModelData) return;
-            
+
             const currentImagePath = currentModelData.image;
             const savedPositions = labelPositions[currentImagePath] || {};
             const devicePositions = savedPositions[deviceType] || {};
-            
+
             // Apply saved positions for this device type
             Object.keys(devicePositions).forEach(jewelleryType => {
                 const label = document.querySelector(`.jewellery-label[data-type="${jewelleryType}"]`);
                 if (label) {
                     const container = document.getElementById('jewellery-container');
                     const containerRect = container.getBoundingClientRect();
-                    
+
                     const x = (devicePositions[jewelleryType].x / 100) * containerRect.width;
                     const y = (devicePositions[jewelleryType].y / 100) * containerRect.height;
-                    
+
                     label.style.left = x + 'px';
                     label.style.top = y + 'px';
                 }
             });
-            
+
             // Update all connecting lines after positioning
             setTimeout(() => {
                 updateAllConnectingLines();
@@ -814,19 +816,19 @@
         // Setup drag functionality for labels
         function setupDragFunctionality() {
             const labels = document.querySelectorAll('.jewellery-label');
-            
+
             labels.forEach(label => {
                 label.addEventListener('mousedown', startDrag);
             });
-            
+
             document.addEventListener('mousemove', drag);
             document.addEventListener('mouseup', endDrag);
-            
+
             // Touch events for mobile
             labels.forEach(label => {
                 label.addEventListener('touchstart', startDragTouch);
             });
-            
+
             document.addEventListener('touchmove', dragTouch);
             document.addEventListener('touchend', endDrag);
         }
@@ -836,10 +838,10 @@
             isDragging = true;
             dragElement = e.currentTarget;
             dragElement.classList.add('dragging');
-            
+
             const rect = dragElement.getBoundingClientRect();
             const containerRect = document.getElementById('jewellery-container').getBoundingClientRect();
-            
+
             dragOffset.x = e.clientX - rect.left;
             dragOffset.y = e.clientY - rect.top;
         }
@@ -850,33 +852,33 @@
             isDragging = true;
             dragElement = e.currentTarget;
             dragElement.classList.add('dragging');
-            
+
             const rect = dragElement.getBoundingClientRect();
             const containerRect = document.getElementById('jewellery-container').getBoundingClientRect();
-            
+
             dragOffset.x = touch.clientX - rect.left;
             dragOffset.y = touch.clientY - rect.top;
         }
 
         function drag(e) {
             if (!isDragging || !dragElement) return;
-            
+
             const container = document.getElementById('jewellery-container');
             const containerRect = container.getBoundingClientRect();
-            
+
             const x = e.clientX - containerRect.left - dragOffset.x;
             const y = e.clientY - containerRect.top - dragOffset.y;
-            
+
             // Constrain within container bounds
             const maxX = containerRect.width - dragElement.offsetWidth;
             const maxY = containerRect.height - dragElement.offsetHeight;
-            
+
             const constrainedX = Math.max(0, Math.min(x, maxX));
             const constrainedY = Math.max(0, Math.min(y, maxY));
-            
+
             dragElement.style.left = constrainedX + 'px';
             dragElement.style.top = constrainedY + 'px';
-            
+
             // Update connecting line
             updateConnectingLine(dragElement.dataset.type);
         }
@@ -884,24 +886,24 @@
         function dragTouch(e) {
             if (!isDragging || !dragElement) return;
             e.preventDefault();
-            
+
             const touch = e.touches[0];
             const container = document.getElementById('jewellery-container');
             const containerRect = container.getBoundingClientRect();
-            
+
             const x = touch.clientX - containerRect.left - dragOffset.x;
             const y = touch.clientY - containerRect.top - dragOffset.y;
-            
+
             // Constrain within container bounds
             const maxX = containerRect.width - dragElement.offsetWidth;
             const maxY = containerRect.height - dragElement.offsetHeight;
-            
+
             const constrainedX = Math.max(0, Math.min(x, maxX));
             const constrainedY = Math.max(0, Math.min(y, maxY));
-            
+
             dragElement.style.left = constrainedX + 'px';
             dragElement.style.top = constrainedY + 'px';
-            
+
             // Update connecting line
             updateConnectingLine(dragElement.dataset.type);
         }
@@ -919,7 +921,7 @@
             const positionDot = document.querySelector(`.jewellery-position[data-type="${jewelleryType}"]`);
             const label = document.querySelector(`.jewellery-label[data-type="${jewelleryType}"]`);
             const line = document.querySelector(`#line-${jewelleryType}`);
-            
+
             if (!positionDot || !label || !line) {
                 console.log(`Missing elements for ${jewelleryType}:`, {
                     dot: !!positionDot,
@@ -928,26 +930,26 @@
                 });
                 return;
             }
-            
+
             const container = document.getElementById('jewellery-container');
             const containerRect = container.getBoundingClientRect();
-            
+
             // Get position dot center
             const dotRect = positionDot.getBoundingClientRect();
             const dotX = dotRect.left - containerRect.left + dotRect.width / 2;
             const dotY = dotRect.top - containerRect.top + dotRect.height / 2;
-            
+
             // Get label center
             const labelRect = label.getBoundingClientRect();
             const labelX = labelRect.left - containerRect.left + labelRect.width / 2;
             const labelY = labelRect.top - containerRect.top + labelRect.height / 2;
-            
+
             // Update line
             line.setAttribute('x1', dotX);
             line.setAttribute('y1', dotY);
             line.setAttribute('x2', labelX);
             line.setAttribute('y2', labelY);
-            
+
             // Debug log for mobile issues
             if (container.classList.contains('mobile-preview')) {
                 console.log(`Mobile line update for ${jewelleryType}:`, {
@@ -961,12 +963,12 @@
         // Update all connecting lines
         function updateAllConnectingLines() {
             const jewelleryTypes = [
-                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops', 
-                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace', 
-                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle', 
+                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
+                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
+                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
                 'rings', 'waist-belt', 'anklet', 'toe-ring'
             ];
-            
+
             jewelleryTypes.forEach(type => {
                 updateConnectingLine(type);
             });
@@ -976,7 +978,7 @@
         function generateModelGrid() {
             const modelGrid = document.getElementById('model-grid');
             currentModels = [];
-            
+
             // Collect all models from all communities
             Object.keys(communityModelMapping).forEach(community => {
                 const mapping = communityModelMapping[community];
@@ -993,10 +995,10 @@
             });
 
             // Remove duplicates based on image path
-            const uniqueModels = currentModels.filter((model, index, self) => 
+            const uniqueModels = currentModels.filter((model, index, self) =>
                 index === self.findIndex(m => m.image === model.image)
             );
-            
+
             currentModels = uniqueModels;
 
             // Generate model cards
@@ -1005,7 +1007,7 @@
                 const modelCard = document.createElement('div');
                 modelCard.className = 'model-card';
                 modelCard.onclick = () => selectModel(model);
-                
+
                 modelCard.innerHTML = `
                     <img src="{{ asset('image/') }}/${model.image}" alt="${model.title}">
                     <div class="model-card-content">
@@ -1013,7 +1015,7 @@
                         <div class="model-card-subtitle">${model.community}</div>
                     </div>
                 `;
-                
+
                 modelGrid.appendChild(modelCard);
             });
         }
@@ -1024,84 +1026,84 @@
             document.querySelectorAll('.model-card').forEach(card => {
                 card.classList.remove('active');
             });
-            
+
             // Add active class to selected card
             const modelIndex = currentModels.findIndex(m => m.id === modelData.id);
             if (modelIndex >= 0) {
                 document.querySelectorAll('.model-card')[modelIndex].classList.add('active');
             }
-            
+
             // Update current model data
             currentModelData = modelData;
-            
+
             // Update the main image
             const modelImage = document.getElementById('current-model-image');
             modelImage.src = `{{ asset('image/') }}/${modelData.image}`;
             modelImage.alt = modelData.title;
-            
+
             // Update jewellery positions and labels
             updateJewelleryPositions(modelData.image);
-            
+
             // Wait for image to load, then position labels and create lines
             modelImage.onload = () => {
                 setTimeout(() => {
                     positionLabelsAndCreateLines();
                 }, 100);
             };
-            
+
             console.log('Selected model:', modelData);
         }
 
         // Position labels initially and create connecting lines
         function positionLabelsAndCreateLines() {
             const jewelleryTypes = [
-                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops', 
-                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace', 
-                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle', 
+                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
+                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
+                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
                 'rings', 'waist-belt', 'anklet', 'toe-ring'
             ];
-            
+
             const rightSideTypes = [
                 'hair-jewellery', 'earrings-stud', 'earrings-drops', 'ear-loops',
                 'short-necklace', 'rings', 'bracelet', 'waist-belt', 'anklet', 'toe-ring'
             ];
-            
+
             // Ensure container has proper dimensions before positioning
             const container = document.getElementById('jewellery-container');
             const containerRect = container.getBoundingClientRect();
-            
+
             if (containerRect.width === 0 || containerRect.height === 0) {
                 console.log('Container not ready, retrying...');
                 setTimeout(() => positionLabelsAndCreateLines(), 50);
                 return;
             }
-            
+
             const svg = document.getElementById('connecting-lines');
             svg.innerHTML = ''; // Clear existing lines
-            
+
             // Ensure SVG has proper dimensions for mobile/desktop
             if (containerRect.width > 0 && containerRect.height > 0) {
                 svg.setAttribute('width', containerRect.width);
                 svg.setAttribute('height', containerRect.height);
                 svg.setAttribute('viewBox', `0 0 ${containerRect.width} ${containerRect.height}`);
             }
-            
+
             // Get saved positions for current model and device
             const currentImagePath = currentModelData ? currentModelData.image : null;
             const modelPositions = currentImagePath && labelPositions[currentImagePath] ? labelPositions[currentImagePath] : {};
             const savedPositions = modelPositions[currentDeviceType] || {};
-            
+
             jewelleryTypes.forEach(type => {
                 const positionDot = document.querySelector(`.jewellery-position[data-type="${type}"]`);
                 const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
-                
+
                 if (positionDot && label) {
                     const dotRect = positionDot.getBoundingClientRect();
                     const container = document.getElementById('jewellery-container');
                     const containerRect = container.getBoundingClientRect();
-                    
+
                     let labelX, labelY;
-                    
+
                     // Check if we have saved positions for this label
                     if (savedPositions[type]) {
                         // Use saved positions (convert from percentage to pixels)
@@ -1112,10 +1114,10 @@
                         // Use default positioning logic
                         const isRightSide = rightSideTypes.includes(type);
                         const offsetDistance = 100; // Distance from the dot
-                        
+
                         const dotX = dotRect.left - containerRect.left + dotRect.width / 2;
                         const dotY = dotRect.top - containerRect.top + dotRect.height / 2;
-                        
+
                         if (isRightSide) {
                             labelX = dotX + offsetDistance;
                             labelY = dotY - label.offsetHeight / 2;
@@ -1125,20 +1127,20 @@
                         }
                         console.log(`Using default position for ${type}`);
                     }
-                    
+
                     // Constrain within container
                     labelX = Math.max(0, Math.min(labelX, containerRect.width - label.offsetWidth));
                     labelY = Math.max(0, Math.min(labelY, containerRect.height - label.offsetHeight));
-                    
+
                     label.style.left = labelX + 'px';
                     label.style.top = labelY + 'px';
-                    
+
                     // Create connecting line
                     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                     line.id = `line-${type}`;
                     line.classList.add('connecting-line');
                     svg.appendChild(line);
-                    
+
                     // Update line position
                     updateConnectingLine(type);
                 }
@@ -1148,21 +1150,21 @@
         // Set up jewellery visibility controls
         function setupJewelleryControls() {
             const jewelleryTypes = [
-                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops', 
-                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace', 
-                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle', 
+                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
+                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
+                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
                 'rings', 'waist-belt', 'anklet', 'toe-ring'
             ];
 
             jewelleryTypes.forEach(type => {
                 const toggle = document.getElementById(`toggle-${type}`);
                 const indicator = toggle.closest('li').querySelector('.visibility-indicator');
-                
+
                 toggle.addEventListener('change', function() {
                     const positionDot = document.querySelector(`.jewellery-position[data-type="${type}"]`);
                     const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
                     const line = document.querySelector(`#line-${type}`);
-                    
+
                     if (this.checked) {
                         if (positionDot) positionDot.style.display = 'block';
                         if (label) label.style.display = 'flex';
@@ -1200,15 +1202,15 @@
             const container = document.getElementById('jewellery-container');
             const containerRect = container.getBoundingClientRect();
             const svg = document.getElementById('connecting-lines');
-            
+
             console.log('Container rect:', containerRect);
             console.log('SVG element:', svg);
             console.log('Current device type:', currentDeviceType);
             console.log('Container classes:', container.className);
-            
+
             // Force redraw
             positionLabelsAndCreateLines();
-            
+
             // Also update all lines
             setTimeout(() => {
                 updateAllConnectingLines();
@@ -1221,29 +1223,29 @@
                 alert('Please select a model first');
                 return;
             }
-            
+
             const positions = {};
             const jewelleryTypes = [
-                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops', 
-                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace', 
-                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle', 
+                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
+                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
+                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
                 'rings', 'waist-belt', 'anklet', 'toe-ring'
             ];
-            
+
             jewelleryTypes.forEach(type => {
                 const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
                 if (label) {
                     const container = document.getElementById('jewellery-container');
                     const containerRect = container.getBoundingClientRect();
                     const labelRect = label.getBoundingClientRect();
-                    
+
                     const x = ((labelRect.left - containerRect.left) / containerRect.width) * 100;
                     const y = ((labelRect.top - containerRect.top) / containerRect.height) * 100;
-                    
+
                     positions[type] = { x, y };
                 }
             });
-            
+
             try {
                 const response = await fetch('/api/jewellery/save-positions', {
                     method: 'POST',
@@ -1257,16 +1259,16 @@
                         device_type: currentDeviceType // Include device type
                     })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     // Update local storage
                     if (!labelPositions[currentModelData.image]) {
                         labelPositions[currentModelData.image] = {};
                     }
                     labelPositions[currentModelData.image][currentDeviceType] = positions;
-                    
+
                     alert(`${currentDeviceType.charAt(0).toUpperCase() + currentDeviceType.slice(1)} label positions saved successfully!`);
                     console.log(`Saved ${currentDeviceType} positions for`, currentModelData.image, positions);
                 } else {
@@ -1474,8 +1476,8 @@
             // Remove all existing image type classes
             const imageTypes = ['lehnga', 'gown', 'saree', 'anarkali', 'others'];
             const stateSpecificClasses = ['telugu-saree', 'telugu-lehnga', 'telugu-gown', 'gujarati-lehnga', 'gujarati-gown',
-                                        'bengali-lehnga', 'bengali-saree', 'marathi-lehnga', 'marathi-saree', 'tamil-gown', 
-                                        'bihari-lehnga', 'bihari-saree', 'kannadiga-lehnga', 'kannadiga-saree', 
+                                        'bengali-lehnga', 'bengali-saree', 'marathi-lehnga', 'marathi-saree', 'tamil-gown',
+                                        'bihari-lehnga', 'bihari-saree', 'kannadiga-lehnga', 'kannadiga-saree',
                                         'jharkhand-lehnga', 'jharkhand-saree', 'jharkhand-gown', 'up-lehnga'];
 
             [...imageTypes, ...stateSpecificClasses].forEach(type => container.classList.remove(type));
