@@ -437,7 +437,8 @@
             stroke: rgba(138, 35, 35, 0.6);
             stroke-width: 2;
             fill: none;
-            stroke-dasharray: 5,5;
+            /* Make the connecting line solid for selected items */
+            stroke-dasharray: none;
         }
 
         /* Jewellery Position Dots - Fixed positions */
@@ -701,10 +702,14 @@
                     </div>
                            <div class="parallax-bg" data-swiper-parallax="-23%"></div>
                     <div class="row text-center outfit-selection-row mt-4 px-2">
-                        <span class="fw-normal fs-1 base-color mb-5 light-font">
-                            Jewellery For <span id="dynamic-language">Tamil</span> Style
-                            <span id="dynamic-event">Mehendi</span> Ceremony
-                        </span>
+                         <div class="mb-4">
+                             <h1 class="fw-normal fs-1 base-color mb-3 light-font">
+                                 Jewellery for the <span id="dynamic-language">Tamil</span> <span id="dynamic-event">Mehendi</span>: Elevate Your Big Day Look
+                             </h1>
+                             <p class="fw-normal fs-5 text-dark-gray mb-0">
+                                 Choose your perfect attire - saree, lehenga, or gown and pair it with jewellery that reflects your unique style.
+                             </p>
+                         </div>
 
                            <!-- Scrollable Row -->
                         <div class="swiper jewelry-swiper">
@@ -754,7 +759,7 @@
                     <div id="outfit-details-container" class="">
 
                         <div id="outfit-details" class="detail-section active">
-                            <h3 id="outfit-title" class="text-center fw-semibold mt-4">Saree Checklist</h3>
+                            <h3 id="outfit-title" class="text-center fw-semibold mt-4">Gown Checklist</h3>
                             <p class="text-center light-weight text-dark-gray mb-1 text-muted">Click on the jewellery you want to explore</p>
                             <!-- Add selection counter -->
                             <p class="text-center mb-3">
@@ -1147,8 +1152,48 @@
             }
         });
 
+        // Function to generate label from image filename
+        function generateLabelFromFilename(imageSrc) {
+            // Extract filename from the full path
+            const filename = imageSrc.split('/').pop().split('.')[0];
+
+            // Extract the part after the dash if it exists
+            let labelPart = filename;
+            if (filename.includes('-')) {
+                labelPart = filename.split('-').slice(1).join('-'); // Get everything after the first dash
+            }
+
+            // Handle special cases for proper spelling
+            const labelMap = {
+                'gown': 'Gown',
+                'lehnga': 'Lehanga', // Fix spelling from lehnga to Lehanga
+                'lahnga': 'Lehanga', // Fix spelling from lahnga to Lehanga
+                'saree': 'Saree',
+                'anarkali': 'Anarkali',
+                'others': 'Choose Your Own Style' // Special case for "others"
+            };
+
+            // Return mapped label or capitalize first letter
+            return labelMap[labelPart] || labelPart.charAt(0).toUpperCase() + labelPart.slice(1);
+        }
+
+        // Function to update button labels from image filenames
+        function updateButtonLabelsFromImages() {
+            document.querySelectorAll('.jewelry-card').forEach(card => {
+                const img = card.querySelector('.card-image');
+                const button = card.querySelector('.outfit-btn');
+
+                if (img && button) {
+                    const label = generateLabelFromFilename(img.src);
+                    button.textContent = label;
+                }
+            });
+        }
+
         // Add click event listeners to cards
         document.addEventListener('DOMContentLoaded', function() {
+            // Update button labels from image filenames on page load
+            updateButtonLabelsFromImages();
             document.querySelectorAll('.jewelry-card').forEach(card => {
                 card.addEventListener('click', function() {
                     // Remove active class from all cards
@@ -1164,6 +1209,13 @@
                     const outfitImg = document.querySelector('#outfit-details .outfit-img');
 
                     if (outfitDetails && outfitTitle && outfitImg && outfitType) {
+                        // Get the outfit name from the button text for reliable title updates
+                        const outfitButton = this.querySelector('.outfit-btn');
+                        const outfitName = outfitButton ? outfitButton.textContent : outfitType.charAt(0).toUpperCase() + outfitType.slice(1);
+
+                        // Update title immediately with the outfit name
+                        outfitTitle.textContent = `${outfitName} Checklist`;
+
                         // Get current community from the language select
                         const languageSelect = document.getElementById('language-select');
                         const currentCommunity = languageSelect ? languageSelect.value : 'Tamil Bride';
@@ -1180,10 +1232,8 @@
                             });
 
                             if (slideData) {
-                                // Update image and title using the state-specific image
-                                const capitalizedOutfit = slideData.alt;
+                                // Update image using the state-specific image
                                 outfitImg.src = `{{ asset('image/') }}/${slideData.png}`;
-                                outfitTitle.textContent = `${capitalizedOutfit} Checklist`;
 
                                 // Update jewellery positions for the selected outfit
                                 const fileName = slideData.png;
@@ -2116,6 +2166,13 @@
                         }
                         if (card) {
                             card.setAttribute('data-outfit', slideData.outfit);
+
+                            // Update button label from the new image filename
+                            const button = card.querySelector('.outfit-btn');
+                            if (button && img) {
+                                const label = generateLabelFromFilename(img.src);
+                                button.textContent = label;
+                            }
                         }
                     }
                 });
@@ -2243,6 +2300,22 @@
             const currentImageSrc = document.querySelector('#jewellery-container .outfit-img')?.src;
             if (!currentImageSrc) return;
 
+            // Check if current image ends with "others" - if so, hide all jewellery labels
+            const imageFilename = currentImageSrc.split('/').pop().toLowerCase();
+            const isOthersImage = imageFilename.includes('-others');
+
+            if (isOthersImage) {
+                // Hide all jewellery labels and position dots for "others" images
+                jewelleryTypes.forEach(type => {
+                    const positionDot = document.querySelector(`.jewellery-position[data-type="${type}"]`);
+                    const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
+
+                    if (positionDot) positionDot.style.display = 'none';
+                    if (label) label.style.display = 'none';
+                });
+                return; // Exit early for "others" images
+            }
+
             // Ensure container has proper dimensions before positioning
             const container = document.getElementById('jewellery-container');
             const containerRect = container.getBoundingClientRect();
@@ -2266,6 +2339,9 @@
                 const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
 
                 if (positionDot && label) {
+                    // Make sure labels are visible for non-"others" images
+                    positionDot.style.display = 'block';
+                    label.style.display = 'flex';
 
                     let labelX, labelY;
 
