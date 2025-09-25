@@ -1090,7 +1090,37 @@
 
             // Get saved positions for current model and device
             const currentImagePath = currentModelData ? currentModelData.image : null;
-            const modelPositions = currentImagePath && labelPositions[currentImagePath] ? labelPositions[currentImagePath] : {};
+            
+            // Try different possible keys for position data (same as welcome.blade.php)
+            let modelPositions = {};
+            if (currentImagePath) {
+                const imagePath = currentImagePath.split('/').pop(); // Get just filename
+                const pathParts = currentImagePath.split('/');
+                const relevantPath = pathParts.length >= 2 ? pathParts.slice(-2).join('/') : imagePath;
+                const sanitizedKey = relevantPath.replace(/[\/\\\.]/g, '_');
+                
+                console.log('Edit-mode debug lookup keys:', {
+                    currentImagePath,
+                    imagePath,
+                    withPrefix: `bystate/${imagePath}`,
+                    relevantPath,
+                    sanitizedKey,
+                    availableKeys: Object.keys(labelPositions)
+                });
+                
+                modelPositions = labelPositions[imagePath] || 
+                               labelPositions[currentImagePath] ||
+                               labelPositions[sanitizedKey] || 
+                               {};
+                               
+                console.log('Edit-mode looking for positions with keys:', {
+                    currentImagePath,
+                    sanitized: sanitizedKey,
+                    found: Object.keys(modelPositions).length > 0 ? 'YES' : 'NO',
+                    foundData: modelPositions
+                });
+            }
+            
             const savedPositions = modelPositions[currentDeviceType] || {};
 
             jewelleryTypes.forEach(type => {
@@ -1109,7 +1139,7 @@
                         // Use saved positions (convert from percentage to pixels)
                         labelX = (savedPositions[type].x / 100) * containerRect.width;
                         labelY = (savedPositions[type].y / 100) * containerRect.height;
-                        console.log(`Using saved ${currentDeviceType} position for ${type}:`, savedPositions[type]);
+                        console.log(`Edit-mode: Using saved ${currentDeviceType} position for ${type}:`, savedPositions[type]);
                     } else {
                         // Use default positioning logic
                         const isRightSide = rightSideTypes.includes(type);
@@ -1125,7 +1155,10 @@
                             labelX = dotX - offsetDistance - label.offsetWidth;
                             labelY = dotY - label.offsetHeight / 2;
                         }
-                        console.log(`Using default position for ${type}`);
+                        console.log(`Edit-mode: Using default position for ${type}`, {
+                            availableInSavedPositions: Object.keys(savedPositions),
+                            lookingFor: type
+                        });
                     }
 
                     // Constrain within container
