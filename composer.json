@@ -7,7 +7,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "google/cloud-firestore": "^1.54",
         "kreait/firebase-php": "^7.22",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9"
@@ -66,9 +65,6 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        },
-        "platform": {
-            "ext-grpc": "1.0.0"
         }
     },
     "minimum-stability": "stable",
