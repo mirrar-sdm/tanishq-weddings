@@ -584,7 +584,7 @@
                                         </div>
 
                                         <div class="d-flex align-items-baseline mb-5">
-                                        <span class="mb-0 form-text" style="white-space: nowrap;">Planning for My</span>
+                                        <span class="mb-0 form-text">Planning for My</span>
                                             <select class="form-select border-bottom  me-3 py-0" required
                                                 id="event-select" aria-label="Select occasion" onchange="posthog.capture('occasion', { occasion: this.options[this.selectedIndex].text })">
                                                 <option selected>Mehendi</option>
