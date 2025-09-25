@@ -2329,6 +2329,7 @@
 
             // Check if current image ends with "others" - if so, hide all jewellery labels
             const imageFilename = currentImageSrc.split('/').pop().toLowerCase();
+
             const isOthersImage = imageFilename.includes('-others');
 
             if (isOthersImage) {
@@ -2396,7 +2397,12 @@
                 const positionDot = document.querySelector(`.jewellery-position[data-type="${type}"]`);
                 const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
 
-                if (positionDot && label) {
+                if (
+                    positionDot &&
+                    label &&
+                    positionDataGlobalReference.hasOwnProperty(imageFilename) &&
+                    positionDataGlobalReference[imageFilename].hasOwnProperty(type)
+                ) {
                     // Make sure labels are visible for non-"others" images
                     positionDot.style.display = 'block';
                     label.style.display = 'flex';
@@ -2447,6 +2453,10 @@
                             updateConnectingLine(type);
                         }, 10);
                     }
+                }else{
+                    positionDot.style.display = 'none';
+                    label.style.display = 'none';
+
                 }
             });
         }
@@ -2529,54 +2539,7 @@
             });
         }
 
-        // Debug function to help troubleshoot line positioning
-        function debugLinePositions() {
-            const jewelleryTypes = [
-                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
-                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
-                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
-                'rings', 'waist-belt', 'anklet', 'toe-ring'
-            ];
 
-            console.log('=== LINE POSITION DEBUG ===');
-
-            jewelleryTypes.forEach(type => {
-                const positionDot = document.querySelector(`.jewellery-position[data-type="${type}"]`);
-                const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
-                const line = document.querySelector(`#line-${type}`);
-
-                if (positionDot && label && line) {
-                    const container = document.getElementById('jewellery-container');
-                    const containerRect = container.getBoundingClientRect();
-
-                    const dotRect = positionDot.getBoundingClientRect();
-                    const dotX = dotRect.left - containerRect.left + dotRect.width / 2;
-                    const dotY = dotRect.top - containerRect.top + dotRect.height / 2;
-
-                    const labelRect = label.getBoundingClientRect();
-                    const labelX = labelRect.left - containerRect.left + labelRect.width / 2;
-                    const labelY = labelRect.top - containerRect.top + labelRect.height / 2;
-
-                    const lineX1 = parseFloat(line.getAttribute('x1'));
-                    const lineY1 = parseFloat(line.getAttribute('y1'));
-                    const lineX2 = parseFloat(line.getAttribute('x2'));
-                    const lineY2 = parseFloat(line.getAttribute('y2'));
-
-                    console.log(`${type}:`, {
-                        dot: { x: dotX.toFixed(1), y: dotY.toFixed(1) },
-                        label: { x: labelX.toFixed(1), y: labelY.toFixed(1) },
-                        line: { x1: lineX1.toFixed(1), y1: lineY1.toFixed(1), x2: lineX2.toFixed(1), y2: lineY2.toFixed(1) },
-                        dotMatches: Math.abs(dotX - lineX1) < 1 && Math.abs(dotY - lineY1) < 1,
-                        labelMatches: Math.abs(labelX - lineX2) < 1 && Math.abs(labelY - lineY2) < 1
-                    });
-                }
-            });
-
-            console.log('=== END DEBUG ===');
-        }
-
-        // Make debug function available globally for console testing
-        window.debugLinePositions = debugLinePositions;
 
         // Make Firebase test functions available globally for debugging
         window.testFirebaseConnection = async function() {
@@ -2620,36 +2583,7 @@
                 // First, try to get list of files from the server (if we implement this endpoint)
                 // For now, use the known files list and make it easy to extend
                 const knownFiles = [
-                    '/data/jewellery-positions.json', // Fallback to clean format
-                    '/data/lehnga-annotations.json',   // Lehnga positioning data
-                    '/data/saree-annotations.json',    // Saree positioning data (contains both lehnga and saree)
-                    '/data/gown-annotations.json',     // Gown positioning data
-                    '/data/anarkali-annotations.json', // Anarkali positioning data
-                    '/data/new-annotations.json',      // New image positioning data
-
-                    // State-specific annotation files
-                    '/data/telegu-saree-annotations.json', // Telugu saree specific positioning
-                    '/data/telugu-lehnga-annotations.json',
-                    '/data/telugu-gown-annotations.json',
-                    '/data/gujarati-lehnga-annotations.json',
-                    '/data/gujarati-gown-annotations.json',
-                    '/data/bengali-lehnga-annotations.json',
-                    '/data/bengali-saree-annotations.json',
-                    '/data/punjabi-lehnga-annotations.json',
-                    '/data/punjabi-saree-annotations.json',
-                    '/data/marathi-lehnga-annotations.json',
-                    '/data/marathi-saree-annotations.json',
-                    '/data/tamil-gown-annotations.json',
-                    '/data/bihari-lehnga-annotations.json',
-                    '/data/bihari-saree-annotations.json',
-                    '/data/kannadiga-lehnga-annotations.json',
-                    '/data/kannadiga-saree-annotations.json',
-                    '/data/jharkhand-lehnga-annotations.json',
-                    '/data/jharkhand-saree-annotations.json',
-                    '/data/jharkhand-gown-annotations.json',
-                    '/data/odiya-lehnga-annotations.json',
-                    '/data/odiya-saree-annotations.json',
-                    '/data/up-lehnga-annotations.json'
+                    '/data/jewelery-point-positions.json'
                 ];
 
                 // All annotation files are now in knownFiles
@@ -2681,10 +2615,9 @@
                     }
                 }
 
-                console.log(`Loaded ${loadedCount} position data files`);
-                console.log('Position data keys:', Object.keys(positionData));
 
                 // Generate CSS for each image and jewellery combination
+
                 generateJewelleryCSSRules(positionData);
 
                 // Don't initialize positions here - they are handled by setupCommunityModelMapping()
@@ -2695,7 +2628,7 @@
                 // Fallback to default positioning
             }
         }
-
+        let positionDataGlobalReference = {};
         // Parse annotation data format into clean position data
         function parseAnnotationData(annotationArray) {
             const positionData = {};
@@ -2734,8 +2667,14 @@
                 positionData[imageName] = positions;
                 // console.log(`Added ${Object.keys(positions).length} jewellery items for ${imageName}:`, positions);
             });
-
+            // Split keys by '/' and store with rightmost part as key in positionDataGlobalReference
+            positionDataGlobalReference = {};
+            Object.keys(positionData).forEach(key => {
+                const rightKey = key.split('/').pop();
+                positionDataGlobalReference[rightKey] = positionData[key];
+            });
             return positionData;
+
         }
 
         // Extract image name from file upload and map to bystate PNG format
