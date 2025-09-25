@@ -53,8 +53,8 @@
                     </div>
                     <div class="modal-body text-center">
                         <div class="d-flex justify-content-center gap-3 mb-3">
-                            <button id="shareMyselfBtn" class="btn  explore-btn bg-color">Share Myself</button>
-                            <button id="shareOthersBtn" class="btn  explore-btn bg-color">Share Others</button>
+                            <button id="shareMyselfBtn" class="btn  explore-btn bg-color">Send via Email</button>
+                            <button id="shareOthersBtn" class="btn  explore-btn bg-color">Share with Friends & Family</button>
                         </div>
                         <div id="shareEmailForm" style="display:none;" class="mb-3">
                             <div class="d-flex flex-row gap-3">

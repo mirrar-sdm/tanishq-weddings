@@ -232,8 +232,7 @@
                 <div class=" col-12 col-xl-10 d-flex px-4 mx-auto justify-content-center my-4">
 
                     <button type="" onclick="nextStep(3)"
-                        class="btn border border-2 rounded-5 btn-custom">Choose
-                        Create List</button>
+                        class="btn border border-2 rounded-5 btn-custom">See My Dream Look!</button>
 
                     {{-- <button class="btn btn-primary" onclick="nextStep(3)">Create List</button> --}}
                 </div>

@@ -879,8 +879,7 @@
 
                 <div class=" col-12 col-xl-10 d-flex px-4 mx-auto justify-content-center my-4">
 
-                    <button type="button" onclick="nextStep(3); posthog.capture('choose-create-list', { page: 'form' })" class="btn border-2 rounded-5 btn-custom">Choose
-                        Create List</button>
+                    <button type="button" onclick="nextStep(3); posthog.capture('choose-create-list', { page: 'form' })" class="btn border-2 rounded-5 btn-custom">See My Dream Look!</button>
 
                     {{-- <button class="btn btn-primary" onclick="nextStep(3)">Create List</button> --}}
                 </div>
@@ -2296,7 +2295,7 @@
                 <button type="button" style="position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 18px; cursor: pointer; color: #856404;" onclick="this.parentElement.remove()">×</button>
             `;
             document.body.appendChild(errorDiv);
-            
+
             // Auto-remove after 8 seconds
             setTimeout(() => {
                 if (errorDiv.parentElement) {
@@ -2359,17 +2358,17 @@
 
             // Extract image filename for saved positions lookup
             const imagePath = currentImageSrc.split('/').pop();
-            
+
             // Try different possible keys for position data
             // 1. Original filename: "telugu-saree.png"
-            // 2. With bystate prefix: "bystate/telugu-saree.png"  
+            // 2. With bystate prefix: "bystate/telugu-saree.png"
             // 3. Sanitized version from path: "bystate_telugu-saree_png"
-            
+
             // Extract the relevant path part for sanitization (e.g., "bystate/telugu-saree.png")
             const pathParts = currentImageSrc.split('/');
             const relevantPath = pathParts.length >= 2 ? pathParts.slice(-2).join('/') : imagePath;
             const sanitizedKey = relevantPath.replace(/[\/\\\.]/g, '_');
-            
+
             console.log('Debug lookup keys:', {
                 currentImageSrc,
                 imagePath,
@@ -2378,12 +2377,12 @@
                 sanitizedKey,
                 availableKeys: Object.keys(labelPositions)
             });
-            
-            const imagePositions = labelPositions[imagePath] || 
-                                 labelPositions[`bystate/${imagePath}`] || 
-                                 labelPositions[sanitizedKey] || 
+
+            const imagePositions = labelPositions[imagePath] ||
+                                 labelPositions[`bystate/${imagePath}`] ||
+                                 labelPositions[sanitizedKey] ||
                                  {};
-                                 
+
             console.log('Looking for positions with keys:', {
                 imagePath,
                 withPrefix: `bystate/${imagePath}`,
@@ -2476,15 +2475,15 @@
             if (currentImageSrc) {
                 const imagePath = currentImageSrc.split('/').pop();
                 const deviceType = getDeviceType();
-                
+
                 // Try different possible keys for position data (same as positionLabelsAndCreateLines)
                 const pathParts = currentImageSrc.split('/');
                 const relevantPath = pathParts.length >= 2 ? pathParts.slice(-2).join('/') : imagePath;
                 const sanitizedKey = relevantPath.replace(/[\/\\\.]/g, '_');
-                
-                const imagePositions = labelPositions[imagePath] || 
-                                     labelPositions[`bystate/${imagePath}`] || 
-                                     labelPositions[sanitizedKey] || 
+
+                const imagePositions = labelPositions[imagePath] ||
+                                     labelPositions[`bystate/${imagePath}`] ||
+                                     labelPositions[sanitizedKey] ||
                                      {};
                 const savedPositions = imagePositions[deviceType] || {};
 
@@ -2578,7 +2577,7 @@
 
         // Make debug function available globally for console testing
         window.debugLinePositions = debugLinePositions;
-        
+
         // Make Firebase test functions available globally for debugging
         window.testFirebaseConnection = async function() {
             try {
