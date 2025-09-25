@@ -2260,7 +2260,7 @@
             return window.innerWidth <= 768 ? 'mobile' : 'desktop';
         }
 
-        // Load saved label positions from server
+        // Load saved label positions from server (Firebase only)
         async function loadLabelPositions() {
             try {
                 const response = await fetch('/api/jewellery/load-positions');
@@ -2268,14 +2268,41 @@
 
                 if (data.success) {
                     labelPositions = data.positions;
-                    console.log('Loaded saved label positions:', labelPositions);
+                    console.log('Loaded saved label positions from Firebase:', labelPositions);
+                    console.log('Available position keys:', Object.keys(labelPositions));
                 } else {
-                    console.error('Failed to load label positions:', data.message);
+                    console.error('Failed to load label positions from Firebase:', data.message);
+                    // Show user-friendly error message
+                    showFirebaseError('Unable to load saved positions. Please check your internet connection.');
                 }
             } catch (error) {
-                console.error('Error loading label positions:', error);
-                labelPositions = {};
+                console.error('Error loading label positions from Firebase:', error);
+                showFirebaseError('Unable to connect to Firebase. Please check your internet connection and try again.');
+                labelPositions = {}; // Use empty positions as last resort
             }
+        }
+
+        // Show Firebase error to user
+        function showFirebaseError(message) {
+            // You can implement a toast notification or error banner here
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-warning';
+            errorDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 300px; background: rgba(255, 193, 7, 0.9); border: 1px solid #ffc107; border-radius: 8px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            errorDiv.innerHTML = `
+                <div style="color: #856404; font-weight: 500;">
+                    <strong>Connection Error:</strong><br>
+                    ${message}
+                </div>
+                <button type="button" style="position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 18px; cursor: pointer; color: #856404;" onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(errorDiv);
+            
+            // Auto-remove after 8 seconds
+            setTimeout(() => {
+                if (errorDiv.parentElement) {
+                    errorDiv.remove();
+                }
+            }, 8000);
         }
 
         // Position labels and create connecting lines
@@ -2332,7 +2359,38 @@
 
             // Extract image filename for saved positions lookup
             const imagePath = currentImageSrc.split('/').pop();
-            const imagePositions = labelPositions[imagePath] || labelPositions[`bystate/${imagePath}`] || {};
+            
+            // Try different possible keys for position data
+            // 1. Original filename: "telugu-saree.png"
+            // 2. With bystate prefix: "bystate/telugu-saree.png"  
+            // 3. Sanitized version from path: "bystate_telugu-saree_png"
+            
+            // Extract the relevant path part for sanitization (e.g., "bystate/telugu-saree.png")
+            const pathParts = currentImageSrc.split('/');
+            const relevantPath = pathParts.length >= 2 ? pathParts.slice(-2).join('/') : imagePath;
+            const sanitizedKey = relevantPath.replace(/[\/\\\.]/g, '_');
+            
+            console.log('Debug lookup keys:', {
+                currentImageSrc,
+                imagePath,
+                withPrefix: `bystate/${imagePath}`,
+                relevantPath,
+                sanitizedKey,
+                availableKeys: Object.keys(labelPositions)
+            });
+            
+            const imagePositions = labelPositions[imagePath] || 
+                                 labelPositions[`bystate/${imagePath}`] || 
+                                 labelPositions[sanitizedKey] || 
+                                 {};
+                                 
+            console.log('Looking for positions with keys:', {
+                imagePath,
+                withPrefix: `bystate/${imagePath}`,
+                sanitized: sanitizedKey,
+                found: Object.keys(imagePositions).length > 0 ? 'YES' : 'NO',
+                foundData: imagePositions
+            });
             const savedPositions = imagePositions[deviceType] || {};
 
             jewelleryTypes.forEach(type => {
@@ -2418,7 +2476,16 @@
             if (currentImageSrc) {
                 const imagePath = currentImageSrc.split('/').pop();
                 const deviceType = getDeviceType();
-                const imagePositions = labelPositions[imagePath] || labelPositions[`bystate/${imagePath}`] || {};
+                
+                // Try different possible keys for position data (same as positionLabelsAndCreateLines)
+                const pathParts = currentImageSrc.split('/');
+                const relevantPath = pathParts.length >= 2 ? pathParts.slice(-2).join('/') : imagePath;
+                const sanitizedKey = relevantPath.replace(/[\/\\\.]/g, '_');
+                
+                const imagePositions = labelPositions[imagePath] || 
+                                     labelPositions[`bystate/${imagePath}`] || 
+                                     labelPositions[sanitizedKey] || 
+                                     {};
                 const savedPositions = imagePositions[deviceType] || {};
 
                 if (savedPositions[jewelleryType]) {
@@ -2511,6 +2578,31 @@
 
         // Make debug function available globally for console testing
         window.debugLinePositions = debugLinePositions;
+        
+        // Make Firebase test functions available globally for debugging
+        window.testFirebaseConnection = async function() {
+            try {
+                const response = await fetch('/api/jewellery/test-firebase');
+                const data = await response.json();
+                console.log('Firebase Test Result:', data);
+                return data;
+            } catch (error) {
+                console.error('Firebase Test Error:', error);
+                return { success: false, message: error.message };
+            }
+        };
+
+        window.migrateLocalToFirebase = async function() {
+            try {
+                const response = await fetch('/api/jewellery/migrate-local-to-firebase');
+                const data = await response.json();
+                console.log('Migration Result:', data);
+                return data;
+            } catch (error) {
+                console.error('Migration Error:', error);
+                return { success: false, message: error.message };
+            }
+        };
         // ========== END NEW LABEL POSITIONING FUNCTIONS ==========
 
         // Load jewellery position data and generate dynamic CSS
@@ -2519,7 +2611,7 @@
         // 1. Create a new annotation file (e.g., /public/data/mynewimage-annotations.json)
         // 2. Add the file path to the knownFiles array below
         // 3. Update the community mapping in communityModelMapping to reference your new image
-        // 4. The system will automatically handle positioning for the new image!
+        // 4. The system will automatically handlefireba positioning for the new image!
         //
         async function loadJewelleryPositions() {
             try {
