@@ -2384,8 +2384,10 @@
                         line.classList.add('connecting-line');
                         svg.appendChild(line);
 
-                        // Update line position
-                        updateConnectingLine(type);
+                        // Update line position with delay to ensure layout is complete
+                        setTimeout(() => {
+                            updateConnectingLine(type);
+                        }, 10);
                     }
                 }
             });
@@ -2407,10 +2409,34 @@
             const dotX = dotRect.left - containerRect.left + dotRect.width / 2;
             const dotY = dotRect.top - containerRect.top + dotRect.height / 2;
 
-            // Get label center
-            const labelRect = label.getBoundingClientRect();
-            const labelX = labelRect.left - containerRect.left + labelRect.width / 2;
-            const labelY = labelRect.top - containerRect.top + labelRect.height / 2;
+            // Get label center - try to use saved position first, fallback to current UI position
+            let labelX, labelY;
+
+            // Check if we have saved positions for this label
+            const currentImageSrc = document.querySelector('#jewellery-container .outfit-img')?.src;
+            if (currentImageSrc) {
+                const imagePath = currentImageSrc.split('/').pop();
+                const deviceType = getDeviceType();
+                const imagePositions = labelPositions[imagePath] || labelPositions[`bystate/${imagePath}`] || {};
+                const savedPositions = imagePositions[deviceType] || {};
+
+                if (savedPositions[jewelleryType]) {
+                    // Use saved position from JSON (convert from percentage to pixels)
+                    labelX = (savedPositions[jewelleryType].x / 100) * containerRect.width + label.offsetWidth / 2;
+                    labelY = (savedPositions[jewelleryType].y / 100) * containerRect.height + label.offsetHeight / 2;
+                    console.log(`Using saved position for line endpoint for ${jewelleryType}:`, savedPositions[jewelleryType]);
+                } else {
+                    // Fallback to current UI position
+                    const labelRect = label.getBoundingClientRect();
+                    labelX = labelRect.left - containerRect.left + labelRect.width / 2;
+                    labelY = labelRect.top - containerRect.top + labelRect.height / 2;
+                }
+            } else {
+                // Fallback to current UI position if no image source
+                const labelRect = label.getBoundingClientRect();
+                labelX = labelRect.left - containerRect.left + labelRect.width / 2;
+                labelY = labelRect.top - containerRect.top + labelRect.height / 2;
+            }
 
             // Update line
             line.setAttribute('x1', dotX);
@@ -2428,10 +2454,62 @@
                 'rings', 'waist-belt', 'anklet', 'toe-ring'
             ];
 
-            jewelleryTypes.forEach(type => {
-                updateConnectingLine(type);
+            // Use requestAnimationFrame to ensure layout is complete before updating lines
+            requestAnimationFrame(() => {
+                jewelleryTypes.forEach(type => {
+                    updateConnectingLine(type);
+                });
             });
         }
+
+        // Debug function to help troubleshoot line positioning
+        function debugLinePositions() {
+            const jewelleryTypes = [
+                'forehead-pendant', 'hair-jewellery', 'earrings-stud', 'earrings-drops',
+                'ear-loops', 'nose-pin', 'choker-necklace', 'short-necklace',
+                'long-necklace', 'multiple-bangles', 'bracelet', 'single-bangle',
+                'rings', 'waist-belt', 'anklet', 'toe-ring'
+            ];
+
+            console.log('=== LINE POSITION DEBUG ===');
+
+            jewelleryTypes.forEach(type => {
+                const positionDot = document.querySelector(`.jewellery-position[data-type="${type}"]`);
+                const label = document.querySelector(`.jewellery-label[data-type="${type}"]`);
+                const line = document.querySelector(`#line-${type}`);
+
+                if (positionDot && label && line) {
+                    const container = document.getElementById('jewellery-container');
+                    const containerRect = container.getBoundingClientRect();
+
+                    const dotRect = positionDot.getBoundingClientRect();
+                    const dotX = dotRect.left - containerRect.left + dotRect.width / 2;
+                    const dotY = dotRect.top - containerRect.top + dotRect.height / 2;
+
+                    const labelRect = label.getBoundingClientRect();
+                    const labelX = labelRect.left - containerRect.left + labelRect.width / 2;
+                    const labelY = labelRect.top - containerRect.top + labelRect.height / 2;
+
+                    const lineX1 = parseFloat(line.getAttribute('x1'));
+                    const lineY1 = parseFloat(line.getAttribute('y1'));
+                    const lineX2 = parseFloat(line.getAttribute('x2'));
+                    const lineY2 = parseFloat(line.getAttribute('y2'));
+
+                    console.log(`${type}:`, {
+                        dot: { x: dotX.toFixed(1), y: dotY.toFixed(1) },
+                        label: { x: labelX.toFixed(1), y: labelY.toFixed(1) },
+                        line: { x1: lineX1.toFixed(1), y1: lineY1.toFixed(1), x2: lineX2.toFixed(1), y2: lineY2.toFixed(1) },
+                        dotMatches: Math.abs(dotX - lineX1) < 1 && Math.abs(dotY - lineY1) < 1,
+                        labelMatches: Math.abs(labelX - lineX2) < 1 && Math.abs(labelY - lineY2) < 1
+                    });
+                }
+            });
+
+            console.log('=== END DEBUG ===');
+        }
+
+        // Make debug function available globally for console testing
+        window.debugLinePositions = debugLinePositions;
         // ========== END NEW LABEL POSITIONING FUNCTIONS ==========
 
         // Load jewellery position data and generate dynamic CSS
