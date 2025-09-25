@@ -16,10 +16,10 @@ class JewelleryPositionController extends Controller
             $positions = $request->input('positions');
             $deviceType = $request->input('device_type', 'desktop'); // new parameter
             
-            // Get existing positions
+            // Get existing positions using Storage
             $existingPositions = [];
-            if (file_exists(public_path($this->positionsFile))) {
-                $existingPositions = json_decode(file_get_contents(public_path($this->positionsFile)), true) ?: [];
+            if (Storage::exists($this->positionsFile)) {
+                $existingPositions = json_decode(Storage::get($this->positionsFile), true) ?: [];
             }
             
             // Initialize structure if doesn't exist
@@ -30,9 +30,9 @@ class JewelleryPositionController extends Controller
             // Update positions for this model and device type
             $existingPositions[$modelImage][$deviceType] = $positions;
             
-            // Save back to file
-            file_put_contents(
-                public_path($this->positionsFile), 
+            // Save using Storage
+            Storage::put(
+                $this->positionsFile, 
                 json_encode($existingPositions, JSON_PRETTY_PRINT)
             );
             
@@ -46,8 +46,8 @@ class JewelleryPositionController extends Controller
     public function loadPositions()
     {
         try {
-            if (file_exists(public_path($this->positionsFile))) {
-                $positions = json_decode(file_get_contents(public_path($this->positionsFile)), true) ?: [];
+            if (Storage::exists($this->positionsFile)) {
+                $positions = json_decode(Storage::get($this->positionsFile), true) ?: [];
                 return response()->json(['success' => true, 'positions' => $positions]);
             }
             

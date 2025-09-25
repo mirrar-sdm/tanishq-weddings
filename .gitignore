@@ -21,4 +21,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-public/data/label-positions.json
+storage/app/data/label-positions.json
+storage/app/data/label-positions-mobile.json
