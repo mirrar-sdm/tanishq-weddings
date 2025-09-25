@@ -1263,6 +1263,7 @@
 
 
     <script>
+        console.log("hello");
         // Hide phone error when user corrects input
         document.addEventListener('DOMContentLoaded', function() {
             var phoneInput = document.getElementById('contactNumber');
